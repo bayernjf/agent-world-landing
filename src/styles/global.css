@@ -1,0 +1,366 @@
+/* ============================================================
+   AGENT WORLD — industrial RTS console design system
+   ============================================================ */
+
+@layer tokens {
+  :root {
+    /* structure */
+    --steel-950: #06090b;
+    --steel-900: #0a0f12;
+    --steel-850: #0f151a;
+    --steel-800: #141c22;
+    --steel-700: #1c262e;
+    --steel-600: #27343d;
+    --steel-500: #384954;
+    --steel-400: #566b78;
+
+    /* signal colors */
+    --power: #ffb020; /* tokens / electricity */
+    --power-dim: #7a5310;
+    --data: #35e0f0; /* data bus */
+    --data-dim: #12626d;
+    --ok: #66e07a;
+    --warn: #ff9d2e;
+    --alert: #ff4a3d;
+    --plasma: #b467ff;
+
+    /* type */
+    --ink: #e8f0f4;
+    --ink-dim: #8ea2ad;
+    --ink-faint: #5d707c;
+
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: "PingFang SC", "Hiragino Sans GB", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    /* bevels — the industrial panel look */
+    --bevel: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.6), inset 1px 0 0 rgba(255, 255, 255, 0.03),
+      inset -1px 0 0 rgba(0, 0, 0, 0.4);
+    --bevel-deep: inset 0 2px 3px rgba(0, 0, 0, 0.8),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+
+    --hair: 1px solid var(--steel-600);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--steel-950);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-x: hidden;
+  /* riveted steel plate floor */
+  background-image:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(53, 224, 240, 0.06),
+      transparent 55%
+    ),
+    linear-gradient(rgba(255, 255, 255, 0.014) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.014) 1px, transparent 1px);
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--power);
+  color: var(--steel-950);
+}
+
+/* ---------- layout ---------- */
+
+.shell {
+  width: min(1280px, 100% - 48px);
+  margin-inline: auto;
+}
+
+@media (max-width: 640px) {
+  .shell {
+    width: min(1280px, 100% - 28px);
+  }
+}
+
+section {
+  position: relative;
+  padding: 96px 0;
+}
+
+/* ---------- shared industrial primitives ---------- */
+
+/* stenciled section label, like a crate marking */
+.stencil {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.stencil::before {
+  content: "";
+  width: 26px;
+  height: 2px;
+  background: var(--power);
+  box-shadow: 0 0 8px var(--power);
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--data);
+}
+
+.h-sec {
+  margin-top: 14px;
+  font-size: clamp(28px, 4.2vw, 44px);
+}
+
+.sub-sec {
+  margin-top: 14px;
+  max-width: 62ch;
+  color: var(--ink-dim);
+}
+
+/* metal panel — the core container of the whole UI */
+.panel {
+  position: relative;
+  background: linear-gradient(180deg, var(--steel-800), var(--steel-850));
+  border: var(--hair);
+  box-shadow: var(--bevel), 0 12px 32px -12px rgba(0, 0, 0, 0.9);
+}
+
+/* corner rivets */
+.panel--riveted::before,
+.panel--riveted::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #7d8d97, #232d35 70%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.panel--riveted::before {
+  left: 7px;
+}
+.panel--riveted::after {
+  right: 7px;
+}
+
+/* panel title bar */
+.panel__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 14px;
+  background: linear-gradient(180deg, var(--steel-700), var(--steel-800));
+  border-bottom: var(--hair);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* status LED */
+.led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 10px currentColor;
+  color: var(--ok);
+  animation: blink 2.4s steps(1, end) infinite;
+}
+.led[data-c="power"] {
+  background: var(--power);
+  color: var(--power);
+}
+.led[data-c="data"] {
+  background: var(--data);
+  color: var(--data);
+}
+.led[data-c="alert"] {
+  background: var(--alert);
+  color: var(--alert);
+}
+
+@keyframes blink {
+  0%,
+  72% {
+    opacity: 1;
+  }
+  76%,
+  84% {
+    opacity: 0.25;
+  }
+  88%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* chunky RTS button */
+.btn {
+  --btn-accent: var(--power);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--steel-950);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--btn-accent) 92%, white),
+    var(--btn-accent)
+  );
+  border: 1px solid color-mix(in srgb, var(--btn-accent) 60%, black);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.28), 0 0 24px -6px var(--btn-accent);
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.2s, filter 0.2s;
+}
+
+.btn:hover {
+  filter: brightness(1.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.28), 0 0 34px -4px var(--btn-accent);
+}
+
+.btn:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+.btn--ghost {
+  color: var(--ink);
+  background: linear-gradient(180deg, var(--steel-700), var(--steel-800));
+  border-color: var(--steel-500);
+  box-shadow: var(--bevel);
+}
+.btn--ghost:hover {
+  color: var(--data);
+  border-color: var(--data-dim);
+  box-shadow: var(--bevel), 0 0 24px -8px var(--data);
+}
+
+/* readout numerals */
+.readout {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+/* thin capacity bar */
+.gauge {
+  height: 5px;
+  background: var(--steel-900);
+  border: 1px solid var(--steel-600);
+  box-shadow: var(--bevel-deep);
+  overflow: hidden;
+}
+.gauge > i {
+  display: block;
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--power) 0 5px,
+    var(--power-dim) 5px 7px
+  );
+  box-shadow: 0 0 10px var(--power);
+}
+
+/* screen atmosphere: scanlines + vignette, non-interactive */
+.crt {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: repeating-linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0 2px,
+      rgba(0, 0, 0, 0.16) 2px 4px
+    ),
+    radial-gradient(
+      ellipse at center,
+      transparent 52%,
+      rgba(0, 0, 0, 0.55) 100%
+    );
+  mix-blend-mode: multiply;
+}
+
+/* reveal-on-scroll */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}

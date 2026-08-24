@@ -1,0 +1,63 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#06090b" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <slot />
+    <div class="crt" aria-hidden="true"></div>
+
+    <script>
+      // reveal-on-scroll
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add("is-in");
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { rootMargin: "0px 0px -8% 0px", threshold: 0.05 }
+      );
+      document.querySelectorAll("[data-reveal]").forEach((el) => io.observe(el));
+
+      // live HUD readouts — the console should feel alive
+      const clock = document.getElementById("res-clock");
+      const tokens = document.getElementById("res-tokens");
+      let t = 24192;
+
+      setInterval(() => {
+        if (clock) {
+          const d = new Date();
+          clock.textContent = [d.getHours(), d.getMinutes(), d.getSeconds()]
+            .map((n) => String(n).padStart(2, "0"))
+            .join(":");
+        }
+        if (tokens) {
+          t += Math.floor(Math.random() * 90) - 30;
+          tokens.textContent = t.toLocaleString("en-US");
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>
