@@ -1,51 +1,23 @@
 ---
 // Pipeline — assembly-line walkthrough of how a task moves through the factory
+import { getLangFromUrl, useTranslations, type UIKey } from "../i18n";
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+
 const steps = [
-  {
-    n: "01",
-    title: "接单入库",
-    body: "自然语言任务进入 INTAKE 分流站，按类型、优先级与预算派单。",
-    tag: "INTAKE",
-    accent: "var(--data)",
-  },
-  {
-    n: "02",
-    title: "拆解排产",
-    body: "PLANNER 把大任务切成可并行的工序，生成带依赖关系的施工图。",
-    tag: "PLANNER",
-    accent: "var(--plasma)",
-  },
-  {
-    n: "03",
-    title: "通电生产",
-    body: "各厂房按工序取料开工，token 沿管道实时供给，负载可视化可干预。",
-    tag: "FORGE",
-    accent: "var(--power)",
-  },
-  {
-    n: "04",
-    title: "质检返工",
-    body: "CRITIC 抽检产出，不合格件走返工回路重新进厂，直到达标。",
-    tag: "CRITIC",
-    accent: "var(--warn)",
-  },
-  {
-    n: "05",
-    title: "装配出货",
-    body: "SHIPYARD 汇总所有零件完成集成构建，成品入 DEPOT 等待交付。",
-    tag: "SHIPYARD",
-    accent: "var(--ok)",
-  },
+  { n: "01", tag: "INTAKE", accent: "var(--data)" },
+  { n: "02", tag: "PLANNER", accent: "var(--plasma)" },
+  { n: "03", tag: "FORGE", accent: "var(--power)" },
+  { n: "04", tag: "CRITIC", accent: "var(--warn)" },
+  { n: "05", tag: "SHIPYARD", accent: "var(--ok)" },
 ];
 ---
 
 <section id="pipeline">
   <div class="shell">
-    <span class="stencil">生产流程</span>
-    <h2 class="h-sec">一条任务，如何走完整条产线</h2>
-    <p class="sub-sec">
-      从接单到出货共五道工序。每一步都可暂停、插手、回滚——你是总调度，不是旁观者。
-    </p>
+    <span class="stencil">{t("pipeline.stencil")}</span>
+    <h2 class="h-sec">{t("pipeline.title")}</h2>
+    <p class="sub-sec">{t("pipeline.sub")}</p>
 
     <ol class="line">
       {steps.map((s) => (
@@ -56,8 +28,8 @@ const steps = [
           </div>
           <div class="line__card">
             <span class="line__tag">{s.tag}</span>
-            <h3 class="line__title">{s.title}</h3>
-            <p class="line__body">{s.body}</p>
+            <h3 class="line__title">{t(`pipeline.${s.n}.title` as UIKey)}</h3>
+            <p class="line__body">{t(`pipeline.${s.n}.body` as UIKey)}</p>
           </div>
         </li>
       ))}

@@ -1,0 +1,89 @@
+# Agent World
+
+> A gamified multi-agent orchestration workbench. Every agent is a factory, tokens are
+> the power supply, and output moves downstream by pipe and truck. You assemble an agent
+> production line, unlock skill cards, and schedule AI throughput the way you would run
+> a real-time-strategy base.
+
+- Site: https://agent-world.bayjf.com (English) · https://agent-world.bayjf.com/zh/ (简体中文)
+- Source: https://github.com/bayernjf/agent-world
+- Status: closed beta. The site is a landing page with an interactive sandbox; access is
+  granted in waves via the request form.
+
+## The core metaphor
+
+Multi-agent systems are usually shown as prose logs or abstract graphs. Agent World renders
+them as an industrial base:
+
+- **Agent = plant.** Each agent is a factory building with a role, a live load reading and
+  a tier.
+- **Token = electricity.** Token budget is a power grid: capacity, current draw, budget per
+  minute, utilization.
+- **Output = freight.** Intermediate artifacts travel along pipes and haul roads to the next
+  station, so data flow is visible rather than inferred.
+- **Skill = skill card.** Agent capabilities are unlocked from a tech tree, the way an RTS
+  building unlocks abilities.
+
+## Seven prefab plant types
+
+| Plant | Role |
+| --- | --- |
+| INTAKE | task triage |
+| PLANNER | decomposition |
+| RESEARCH | prospecting |
+| FORGE | code forge |
+| CRITIC | QA & rework |
+| SHIPYARD | build & ship |
+| DEPOT | artifact depot |
+
+## The production flow (five stations)
+
+1. **Intake** — natural-language tasks arrive at the triage station and are dispatched by
+   type, priority and budget.
+2. **Planning** — PLANNER cuts the job into parallelizable stations and emits a
+   dependency-aware build plan.
+3. **Fabrication** — each plant draws stock and starts work; tokens feed down the pipes
+   live, and load stays visible and steerable.
+4. **QA & rework** — CRITIC samples the output and sends anything below spec back around
+   the rework loop until it passes.
+5. **Assembly & shipping** — SHIPYARD integrates every part into a final build and files
+   the artifact in DEPOT.
+
+Every step can be paused, overridden or rolled back. The operator is the dispatcher, not a
+spectator.
+
+## Interactive sandbox
+
+The landing page ships a working sandbox: drag plants, lay pipes, delete stations you do not
+need, then hit Dispatch. A work packet follows the topology you built all the way to the
+depot, tokens are billed per segment, and anything failing QA loops back through rework.
+Pipe colours encode what is moving — context/research, plan/blueprint, build/output, rework.
+
+## Skill tech tree
+
+24 skill cards across six branches and four tiers (T1–T4), with cross-branch prerequisites:
+
+- **Orchestration** — who works on what, and when
+- **Fabrication** — turning plans into real artifacts
+- **Quality** — nothing substandard leaves the gate
+- **Intelligence** — so the plants know what they are doing
+- **Infrastructure** — power, pipes, and no downtime
+- **Delivery** — getting the goods to the user
+
+## Control panel readouts
+
+Token supply, agent activity, pipe throughput, task queue, quality index (pass/rework rate),
+power draw against budget, and system status for orchestrator, pipes, storage and API.
+
+## What makes it different
+
+- Orchestration state is legible at a glance instead of buried in logs.
+- Cost is a first-class resource in the interface, not a bill discovered afterwards.
+- Topology is editable by hand — you can see and change the route work takes.
+- Capability growth is explicit: skills are unlocked, not silently configured.
+
+## Beta access
+
+Seats in the first wave are limited and go first to teams with a real multi-agent workflow.
+The request form asks for an email and team size. One message when a seat is ready; no
+marketing mail.

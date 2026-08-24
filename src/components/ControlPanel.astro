@@ -1,56 +1,57 @@
 ---
 // ControlPanel — RTS‑style command dashboard with live gauges
+import { getLangFromUrl, useTranslations } from "../i18n";
+
+const t = useTranslations(getLangFromUrl(Astro.url));
 ---
 
 <section id="control" class="shell">
-  <span class="stencil">控制面板</span>
-  <h2 class="h-sec">工厂调度总览</h2>
-  <p class="sub-sec">
-    实时监控所有 Agent 工厂的运行状态、token 负载和产出效率。
-  </p>
+  <span class="stencil">{t("control.stencil")}</span>
+  <h2 class="h-sec">{t("control.title")}</h2>
+  <p class="sub-sec">{t("control.sub")}</p>
 
   <div class="dash">
     <!-- primary row: 3 large gauges -->
     <div class="panel panel--riveted dash__primary">
       <div class="panel__bar">
-        <span>资源总览</span>
+        <span>{t("control.resources")}</span>
         <span class="led" data-c="power" />
       </div>
       <div class="dash__primary-inner">
         <div class="dash__metric">
-          <span class="dash__metric-label">TOKEN 供应</span>
+          <span class="dash__metric-label">{t("control.tokenSupply")}</span>
           <div class="dash__value">
             <span class="readout dash__num">24,192</span>
             <span class="dash__unit">tokens</span>
           </div>
           <div class="gauge"><i style="width:74%"></i></div>
           <div class="dash__sub">
-            <span>装机容量 32,000</span>
-            <span>负载 74%</span>
+            <span>{t("control.capacity")}</span>
+            <span>{t("control.load")}</span>
           </div>
         </div>
         <div class="dash__metric">
-          <span class="dash__metric-label">Agent 活跃度</span>
+          <span class="dash__metric-label">{t("control.agentActivity")}</span>
           <div class="dash__value">
             <span class="readout dash__num">12</span>
-            <span class="dash__unit">/ 16 在线</span>
+            <span class="dash__unit">{t("control.online")}</span>
           </div>
           <div class="gauge"><i style="width:75%"></i></div>
           <div class="dash__sub">
-            <span>6 空闲 · 4 工作中</span>
-            <span>2 待机</span>
+            <span>{t("control.idleWorking")}</span>
+            <span>{t("control.standby")}</span>
           </div>
         </div>
         <div class="dash__metric">
-          <span class="dash__metric-label">管道吞吐量</span>
+          <span class="dash__metric-label">{t("control.throughput")}</span>
           <div class="dash__value">
             <span class="readout dash__num">41</span>
             <span class="dash__unit">arts / min</span>
           </div>
           <div class="gauge"><i style="width:62%"></i></div>
           <div class="dash__sub">
-            <span>峰值为 66/min</span>
-            <span>工时利用率 62%</span>
+            <span>{t("control.peak")}</span>
+            <span>{t("control.utilization")}</span>
           </div>
         </div>
       </div>
@@ -60,15 +61,15 @@
     <div class="dash__secondary">
       <div class="panel panel--riveted dash__stat-panel">
         <div class="panel__bar">
-          <span>任务队列</span>
+          <span>{t("control.queue")}</span>
           <span class="led" data-c="data" />
         </div>
         <div class="dash__stat-inner">
           <div class="readout dash__num-s">7</div>
           <div class="dash__queue">
-            <span class="dash__q-item">排队中</span>
-            <span class="dash__q-item">处理中</span>
-            <span class="dash__q-item">待检视</span>
+            <span class="dash__q-item">{t("control.queued")}</span>
+            <span class="dash__q-item">{t("control.processing")}</span>
+            <span class="dash__q-item">{t("control.review")}</span>
           </div>
           <div class="dash__q-bars">
             <div class="dash__q-bar"><i style="width:60%"></i></div>
@@ -79,52 +80,52 @@
       </div>
       <div class="panel panel--riveted dash__stat-panel">
         <div class="panel__bar">
-          <span>质量指数</span>
+          <span>{t("control.quality")}</span>
           <span class="led" data-c="ok" />
         </div>
         <div class="dash__stat-inner">
           <div class="readout dash__num-s" style="color:var(--ok)">96.3%</div>
           <div class="dash__sub" style="margin-top:6px;text-align:center">
-            <span>通过率 96.3%</span>
-            <span>返工率 3.7%</span>
+            <span>{t("control.passRate")}</span>
+            <span>{t("control.reworkRate")}</span>
           </div>
         </div>
       </div>
       <div class="panel panel--riveted dash__stat-panel">
         <div class="panel__bar">
-          <span>电力消耗</span>
+          <span>{t("control.power")}</span>
           <span class="led" data-c="power" />
         </div>
         <div class="dash__stat-inner">
           <div class="readout dash__num-s" style="color:var(--power)">23.7k</div>
           <div class="dash__sub" style="margin-top:6px;text-align:center">
-            <span>当前 23.7k tok/min</span>
-            <span>预算 32k tok/min</span>
+            <span>{t("control.current")}</span>
+            <span>{t("control.budget")}</span>
           </div>
         </div>
       </div>
       <div class="panel panel--riveted dash__stat-panel">
         <div class="panel__bar">
-          <span>系统状态</span>
+          <span>{t("control.system")}</span>
           <span class="led" data-c="data" />
         </div>
         <div class="dash__stat-inner">
           <div class="dash__status-list">
             <div class="dash__status-row">
               <span class="led" data-c="ok" />
-              <span>编排器</span>
+              <span>{t("control.orchestrator")}</span>
             </div>
             <div class="dash__status-row">
               <span class="led" data-c="ok" />
-              <span>管道</span>
+              <span>{t("control.pipes")}</span>
             </div>
             <div class="dash__status-row">
               <span class="led" data-c="ok" />
-              <span>存储</span>
+              <span>{t("control.storage")}</span>
             </div>
             <div class="dash__status-row">
               <span class="led" data-c="ok" />
-              <span>API</span>
+              <span>{t("control.api")}</span>
             </div>
           </div>
         </div>

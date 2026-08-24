@@ -48,19 +48,52 @@ interface Status {
   text: string;
 }
 
-const MODE_LABEL: Record<Mode, string> = {
-  select: "选择 / 拖拽",
-  connect: "连线",
-  delete: "拆除",
-};
+/**
+ * All of the island's copy, resolved on the server and handed over as a prop.
+ * Importing the dictionary here would ship every locale to the client, and
+ * props must serialize, so the few interpolated strings carry {placeholders}
+ * that `fill` substitutes rather than being functions.
+ */
+export interface SandboxStrings {
+  mode: Record<Mode, string>;
+  hint: Record<Mode, string>;
+  /** plant id -> its role caption */
+  roles: Record<string, string>;
+  reset: string;
+  tokens: string;
+  dispatch: string;
+  dispatching: string;
+  touchHint: string;
+  inspector: string;
+  load: string;
+  throughput: string;
+  inbound: string;
+  outbound: string;
+  status: {
+    idle: string;
+    blocked: string;
+    shipped: string;
+    rework: string;
+    noRoute: string;
+    inTransit: string;
+    restored: string;
+    /** {id} */
+    plantRemoved: string;
+    pipeRemoved: string;
+    pipeExists: string;
+    /** {from} {to} */
+    pipeAdded: string;
+    /** {name} */
+    connectFrom: string;
+  };
+}
 
-const MODE_HINT: Record<Mode, string> = {
-  select: "拖动厂房重新布局，单击查看厂房详情",
-  connect: "依次点击两座厂房，铺设一条管道",
-  delete: "点击厂房或管道，将其拆除",
-};
+const MODE_ORDER: Mode[] = ["select", "connect", "delete"];
 
-export default function SandboxCanvas() {
+const fill = (tpl: string, vars: Record<string, string>) =>
+  tpl.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? `{${k}}`);
+
+export default function SandboxCanvas({ strings }: { strings: SandboxStrings }) {
   const [plants, setPlants] = useState<Plant[]>(INITIAL_PLANTS);
   const [connections, setConnections] = useState<Connection[]>(INITIAL_CONNECTIONS);
   const [mode, setMode] = useState<Mode>("select");
@@ -72,7 +105,7 @@ export default function SandboxCanvas() {
   const [activeStation, setActiveStation] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>({
     tone: "idle",
-    text: "产线就绪 · 等待投料",
+    text: strings.status.idle,
   });
   /** Drag and connect need a real pointer; below the map breakpoint we only inspect. */
   const [canEdit, setCanEdit] = useState(true);
@@ -152,7 +185,7 @@ export default function SandboxCanvas() {
       const conn = toId ? findConnection(connections, fromId, toId) : undefined;
       const el = conn ? pathRefs.current[conn.id] : null;
       if (!conn || !el) {
-        setStatus({ tone: "error", text: "管道中断 · 工件滞留" });
+        setStatus({ tone: "error", text: strings.status.blocked });
         stopTask();
         return;
       }
@@ -169,7 +202,7 @@ export default function SandboxCanvas() {
         setActiveStation(arrived);
 
         if (run.idx >= run.hops.length - 1) {
-          setStatus({ tone: "done", text: "工件出库 · SHIPPED" });
+          setStatus({ tone: "done", text: strings.status.shipped });
           taskRef.current = null;
           rafRef.current = null;
           setRunning(false);
@@ -184,7 +217,7 @@ export default function SandboxCanvas() {
           if (loop && Math.random() < REWORK_CHANCE) {
             run.hops.splice(run.idx + 1, 0, loop.to, CRITIC_ID);
             run.reworked = true;
-            setStatus({ tone: "warn", text: "质检未通过 · 返工回流" });
+            setStatus({ tone: "warn", text: strings.status.rework });
           }
         }
 
@@ -194,14 +227,14 @@ export default function SandboxCanvas() {
 
       rafRef.current = requestAnimationFrame(tick);
     },
-    [connections, stopTask]
+    [connections, stopTask, strings]
   );
 
   const dispatchTask = useCallback(() => {
     if (running) return;
     const hops = findRoute(connections, SOURCE_ID, SINK_ID);
     if (!hops) {
-      setStatus({ tone: "error", text: "产线断开 · NO ROUTE TO DEPOT" });
+      setStatus({ tone: "error", text: strings.status.noRoute });
       return;
     }
     const start = plantById(plants, hops[0]);
@@ -221,10 +254,10 @@ export default function SandboxCanvas() {
     };
     setRunning(true);
     setActiveStation(hops[0]);
-    setStatus({ tone: "run", text: "工件已投料 · IN TRANSIT" });
+    setStatus({ tone: "run", text: strings.status.inTransit });
     lastTsRef.current = performance.now();
     rafRef.current = requestAnimationFrame(tick);
-  }, [connections, plants, running, tick]);
+  }, [connections, plants, running, tick, strings]);
 
   useEffect(
     () => () => {
@@ -243,7 +276,7 @@ export default function SandboxCanvas() {
     setSelectedId("forge");
     setConnectFrom(null);
     setTokens(STARTING_TOKENS);
-    setStatus({ tone: "idle", text: "产线已复原 · 等待投料" });
+    setStatus({ tone: "idle", text: strings.status.restored });
   };
 
   const switchMode = (next: Mode) => {
@@ -257,13 +290,13 @@ export default function SandboxCanvas() {
     setPlants((prev) => prev.filter((p) => p.id !== id));
     setConnections((prev) => prev.filter((c) => c.from !== id && c.to !== id));
     if (selectedId === id) setSelectedId(null);
-    setStatus({ tone: "warn", text: `已拆除厂房 · ${id.toUpperCase()}` });
+    setStatus({ tone: "warn", text: fill(strings.status.plantRemoved, { id: id.toUpperCase() }) });
   };
 
   const removeConnection = (id: string) => {
     stopTask();
     setConnections((prev) => prev.filter((c) => c.id !== id));
-    setStatus({ tone: "warn", text: "已拆除一段管道" });
+    setStatus({ tone: "warn", text: strings.status.pipeRemoved });
   };
 
   const linkPlants = (fromId: string, toId: string) => {
@@ -272,7 +305,7 @@ export default function SandboxCanvas() {
       return;
     }
     if (findConnection(connections, fromId, toId)) {
-      setStatus({ tone: "warn", text: "这条管道已经存在" });
+      setStatus({ tone: "warn", text: strings.status.pipeExists });
       setConnectFrom(null);
       return;
     }
@@ -290,7 +323,10 @@ export default function SandboxCanvas() {
     setCursor(null);
     setStatus({
       tone: "done",
-      text: `已铺设管道 · ${fromId.toUpperCase()} → ${toId.toUpperCase()}`,
+      text: fill(strings.status.pipeAdded, {
+        from: fromId.toUpperCase(),
+        to: toId.toUpperCase(),
+      }),
     });
   };
 
@@ -345,7 +381,7 @@ export default function SandboxCanvas() {
       if (!canEdit) return;
       if (connectFrom === null) {
         setConnectFrom(p.id);
-        setStatus({ tone: "run", text: `起点 ${p.name} · 请点击目标厂房` });
+        setStatus({ tone: "run", text: fill(strings.status.connectFrom, { name: p.name }) });
       } else {
         linkPlants(connectFrom, p.id);
       }
@@ -364,7 +400,7 @@ export default function SandboxCanvas() {
     <div className="sb">
       <div className="sb__toolbar">
         <div className="sb__tools">
-          {(Object.keys(MODE_LABEL) as Mode[]).map((m) => (
+          {MODE_ORDER.map((m) => (
             <button
               key={m}
               type="button"
@@ -372,17 +408,17 @@ export default function SandboxCanvas() {
               onClick={() => switchMode(m)}
               disabled={!canEdit && m !== "select"}
             >
-              {MODE_LABEL[m]}
+              {strings.mode[m]}
             </button>
           ))}
           <button type="button" className="sb__tool" onClick={reset}>
-            重置
+            {strings.reset}
           </button>
         </div>
 
         <div className="sb__right">
           <div className="sb__tokens">
-            <span className="sb__tokens-label">TOKEN 储备</span>
+            <span className="sb__tokens-label">{strings.tokens}</span>
             <span className="sb__tokens-val readout">{tokens.toLocaleString("en-US")}</span>
             <div className="gauge sb__tokens-gauge">
               <i style={{ width: `${(tokens / STARTING_TOKENS) * 100}%` }} />
@@ -394,7 +430,7 @@ export default function SandboxCanvas() {
             onClick={dispatchTask}
             disabled={running}
           >
-            {running ? "生产中…" : "派发任务"}
+            {running ? strings.dispatching : strings.dispatch}
           </button>
         </div>
       </div>
@@ -406,8 +442,8 @@ export default function SandboxCanvas() {
         </span>
         <span className="sb__hint">
           {canEdit
-            ? MODE_HINT[mode]
-            : "拖拽建线请在桌面端体验 · 此处可左右拖动查看、点选厂房并派发任务"}
+            ? strings.hint[mode]
+            : strings.touchHint}
         </span>
       </div>
 
@@ -582,7 +618,7 @@ export default function SandboxCanvas() {
                   {p.name}
                 </text>
                 <text x={x + 10} y={y + 44} className="sb-t-role">
-                  {p.role}
+                  {strings.roles[p.id]}
                 </text>
                 <rect x={x + 10} y={y + 56} width={PLANT_W - 20} height="6" fill="#0a1014" stroke="#2c3a44" />
                 <rect x={x + 11} y={y + 57} width={((PLANT_W - 22) * load) / 100} height="4" fill={color} fillOpacity="0.85" />
@@ -608,29 +644,29 @@ export default function SandboxCanvas() {
         {selected && mode === "select" && (
           <div className="sb__inspector panel panel--riveted">
             <div className="panel__bar">
-              <span>厂房检视 · UNIT INSPECTOR</span>
+              <span>{strings.inspector}</span>
               <span className="led" data-c="power" />
             </div>
             <div className="sb__inspector-body">
               <div className="sb__insp-title" style={{ color: ACCENT_VAR[selected.accent] }}>
                 {selected.name}
-                <span className="sb__insp-role">{selected.role}</span>
+                <span className="sb__insp-role">{strings.roles[selected.id]}</span>
               </div>
               <dl className="sb__insp-grid">
                 <div>
-                  <dt>负载</dt>
+                  <dt>{strings.load}</dt>
                   <dd>{loadOf(connections, selected.id)}%</dd>
                 </div>
                 <div>
-                  <dt>吞吐</dt>
+                  <dt>{strings.throughput}</dt>
                   <dd>{selected.rate} art/h</dd>
                 </div>
                 <div>
-                  <dt>入线</dt>
+                  <dt>{strings.inbound}</dt>
                   <dd>{connections.filter((c) => c.to === selected.id).length}</dd>
                 </div>
                 <div>
-                  <dt>出线</dt>
+                  <dt>{strings.outbound}</dt>
                   <dd>{connections.filter((c) => c.from === selected.id).length}</dd>
                 </div>
               </dl>

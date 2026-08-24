@@ -1,5 +1,15 @@
 ---
+import BayjfLink from "@bay/landing-ui/components/BayjfLink.astro";
+import StarOnGithub from "@bay/landing-ui/components/StarOnGithub.astro";
 import Logo from "./Logo.astro";
+import { getLangFromUrl, useTranslations, getAltLangPath, localizePath } from "../i18n";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const altPath = getAltLangPath(Astro.url, lang);
+
+// the legal pages carry this footer too, so section links have to be absolute
+const home = localizePath("/", lang);
 
 const year = 2026;
 ---
@@ -11,15 +21,24 @@ const year = 2026;
         <Logo />
         <span class="foot__logo">AGENT&thinsp;WORLD</span>
       </span>
-      <p class="foot__tag">游戏化的多智能体编排工作台</p>
+      <p class="foot__tag">{t("foot.tag")}</p>
     </div>
     <nav class="foot__nav">
-      <a href="#control">控制面板</a>
-      <a href="#pipeline">生产流程</a>
-      <a href="#sandbox">交互沙盘</a>
-      <a href="#skills">技能树</a>
-      <a href="#cta">内测申请</a>
+      <a href={`${home}#control`}>{t("foot.nav.control")}</a>
+      <a href={`${home}#pipeline`}>{t("foot.nav.pipeline")}</a>
+      <a href={`${home}#sandbox`}>{t("foot.nav.sandbox")}</a>
+      <a href={`${home}#skills`}>{t("foot.nav.skills")}</a>
+      <a href={`${home}#cta`}>{t("foot.nav.cta")}</a>
+      <a href={localizePath("/privacy", lang)}>{t("foot.nav.privacy")}</a>
+      <a href={localizePath("/terms", lang)}>{t("foot.nav.terms")}</a>
     </nav>
+    <div class="foot__ext">
+      <BayjfLink size={16} />
+      <StarOnGithub href="https://github.com/bayernjf/agent-world" size={14} />
+      <a class="lang-switch" href={altPath} hreflang={lang === "zh" ? "en" : "zh-CN"}>
+        {t("nav.langSwitch")}
+      </a>
+    </div>
     <div class="foot__meta">
       <span class="readout">v0.1.0-alpha</span>
       <span>© {year} Agent World</span>
@@ -78,6 +97,22 @@ const year = 2026;
     font-family: var(--mono);
     font-size: 10px;
     color: var(--ink-faint);
+  }
+  .foot__ext {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+  /* :global, because these anchors come from @bay/landing-ui and so carry that
+     component's scope attribute rather than this one's */
+  .foot__ext :global(a) {
+    transition: color 160ms ease-out;
+  }
+  .foot__ext :global(a:hover) {
+    color: var(--data);
   }
 
   @media (max-width: 700px) {

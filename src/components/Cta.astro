@@ -1,47 +1,47 @@
 ---
 // Cta — recruitment terminal, styled as an RTS build order confirmation
+import { getLangFromUrl, useTranslations } from "../i18n";
+
+const t = useTranslations(getLangFromUrl(Astro.url));
 ---
 
 <section id="cta">
   <div class="shell">
     <div class="panel panel--riveted cta">
       <div class="panel__bar">
-        <span>建造许可申请 · BUILD PERMIT</span>
+        <span>{t("cta.bar")}</span>
         <span class="led" data-c="power" />
       </div>
       <div class="cta__body">
         <div class="cta__copy">
-          <span class="eyebrow">内测招募</span>
-          <h2 class="cta__title">申请一块厂区，开始建造你的智能体产线</h2>
-          <p class="cta__sub">
-            首批内测席位有限，优先开放给有真实多智能体工作流需求的团队。
-            留下邮箱，我们会随开服批次逐轮发出建造许可。
-          </p>
+          <span class="eyebrow">{t("cta.eyebrow")}</span>
+          <h2 class="cta__title">{t("cta.title")}</h2>
+          <p class="cta__sub">{t("cta.sub")}</p>
           <ul class="cta__list">
-            <li>7 类预制厂房模板，开箱即用</li>
-            <li>完整 token 流向可视化与成本预算控制</li>
-            <li>技能卡系统，按需解锁 Agent 能力</li>
+            <li>{t("cta.list1")}</li>
+            <li>{t("cta.list2")}</li>
+            <li>{t("cta.list3")}</li>
           </ul>
         </div>
         <form class="cta__form" method="post" action="#" novalidate>
           <label class="cta__field">
-            <span class="cta__label">指挥官邮箱</span>
+            <span class="cta__label">{t("cta.email")}</span>
             <input type="email" name="email" required placeholder="commander@base.io" />
           </label>
           <label class="cta__field">
-            <span class="cta__label">团队规模</span>
+            <span class="cta__label">{t("cta.size")}</span>
             <select name="size">
-              <option>1 人 · 独立开发</option>
-              <option>2–10 人 · 小队</option>
-              <option>11–50 人 · 中型团队</option>
-              <option>50 人以上 · 企业</option>
+              <option>{t("cta.size1")}</option>
+              <option>{t("cta.size2")}</option>
+              <option>{t("cta.size3")}</option>
+              <option>{t("cta.size4")}</option>
             </select>
           </label>
           <button type="submit" class="btn cta__submit">
-            提交申请
+            {t("cta.submit")}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
           </button>
-          <p class="cta__note">不发送营销邮件。仅在你的席位就绪时通知一次。</p>
+          <p class="cta__note">{t("cta.note")}</p>
         </form>
       </div>
     </div>

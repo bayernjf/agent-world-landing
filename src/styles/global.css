@@ -41,6 +41,12 @@
 
     --hair: 1px solid var(--steel-600);
   }
+
+  /* PingFang renders Latin text noticeably lighter and wider than the system UI
+     face, so the English pages lead with the native stack instead. */
+  :root:lang(en) {
+    --sans: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
 }
 
 *,
@@ -300,6 +306,85 @@ section {
   font-family: var(--mono);
   font-variant-numeric: tabular-nums;
   font-weight: 700;
+}
+
+/* locale toggle — shared by the HUD bar and the footer */
+.lang-switch {
+  flex: none;
+  padding: 3px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+  border: 1px solid var(--steel-600);
+  background: var(--steel-900);
+  box-shadow: var(--bevel);
+  transition:
+    color 0.16s,
+    border-color 0.16s;
+}
+.lang-switch:hover {
+  color: var(--data);
+  border-color: var(--data-dim);
+}
+
+/* legal / long-form pages — shared by privacy and terms in both locales */
+.doc {
+  padding: 120px 0 96px;
+}
+
+.doc__panel {
+  max-width: 820px;
+  padding: 34px 30px 40px;
+}
+
+.doc h1 {
+  font-size: clamp(26px, 3.6vw, 36px);
+}
+
+.doc__stamp {
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.doc__body {
+  margin-top: 32px;
+  display: grid;
+  gap: 26px;
+  color: var(--ink-dim);
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.doc__body h2 {
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+.doc__body p,
+.doc__body ul {
+  margin-top: 8px;
+}
+
+.doc__body ul {
+  padding-left: 18px;
+  list-style: square;
+  display: grid;
+  gap: 4px;
+}
+
+.doc__body a {
+  color: var(--data);
+  border-bottom: 1px solid var(--data-dim);
+}
+
+.doc__back {
+  margin-top: 34px;
 }
 
 /* thin capacity bar */

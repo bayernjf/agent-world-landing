@@ -5,6 +5,10 @@
  * pipes carry the flow. Pure SVG + SMIL so it stays crisp and cheap.
  */
 
+import { getLangFromUrl, useTranslations, type UIKey } from "../i18n";
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+
 const W = 1240;
 const H = 640;
 
@@ -13,20 +17,19 @@ type Accent = "power" | "data" | "plasma" | "ok";
 const agents: {
   id: string;
   name: string;
-  role: string;
   cx: number;
   cy: number;
   accent: Accent;
   load: number;
   tier: string;
 }[] = [
-  { id: "intake", name: "INTAKE", role: "任务分流", cx: 110, cy: 320, accent: "data", load: 64, tier: "T1" },
-  { id: "planner", name: "PLANNER", role: "拆解规划", cx: 400, cy: 150, accent: "plasma", load: 82, tier: "T3" },
-  { id: "research", name: "RESEARCH", role: "资料勘探", cx: 400, cy: 490, accent: "data", load: 47, tier: "T2" },
-  { id: "forge", name: "FORGE", role: "代码锻造", cx: 660, cy: 320, accent: "power", load: 93, tier: "T4" },
-  { id: "critic", name: "CRITIC", role: "质检返工", cx: 930, cy: 150, accent: "ok", load: 58, tier: "T3" },
-  { id: "shipyard", name: "SHIPYARD", role: "构建交付", cx: 930, cy: 490, accent: "power", load: 71, tier: "T3" },
-  { id: "depot", name: "DEPOT", role: "成品仓库", cx: 1150, cy: 320, accent: "ok", load: 35, tier: "T2" },
+  { id: "intake", name: "INTAKE", cx: 110, cy: 320, accent: "data", load: 64, tier: "T1" },
+  { id: "planner", name: "PLANNER", cx: 400, cy: 150, accent: "plasma", load: 82, tier: "T3" },
+  { id: "research", name: "RESEARCH", cx: 400, cy: 490, accent: "data", load: 47, tier: "T2" },
+  { id: "forge", name: "FORGE", cx: 660, cy: 320, accent: "power", load: 93, tier: "T4" },
+  { id: "critic", name: "CRITIC", cx: 930, cy: 150, accent: "ok", load: 58, tier: "T3" },
+  { id: "shipyard", name: "SHIPYARD", cx: 930, cy: 490, accent: "power", load: 71, tier: "T3" },
+  { id: "depot", name: "DEPOT", cx: 1150, cy: 320, accent: "ok", load: 35, tier: "T2" },
 ];
 
 const BW = 140;
@@ -63,7 +66,7 @@ const colorOf: Record<Accent, string> = {
   <svg
     viewBox={`0 0 ${W} ${H}`}
     role="img"
-    aria-label="Agent World 工厂调度视图：每个 Agent 是一座厂房，token 作为电力沿管道流动"
+    aria-label={t("map.aria")}
   >
     <defs>
       <!-- steel body -->
@@ -117,7 +120,7 @@ const colorOf: Record<Accent, string> = {
       <path d="M400,533 V588 M930,533 V588 M1150,533 V588" fill="none" stroke="rgba(120,160,180,.10)" stroke-width="9" stroke-linecap="round" />
       <path id="truckRoute" d={truckRoute} fill="none" stroke="rgba(120,160,180,.14)" stroke-width="16" stroke-linecap="round" />
       <path d={truckRoute} fill="none" stroke="rgba(255,176,32,.22)" stroke-width="1.5" stroke-dasharray="14 12" />
-      <text x="300" y="612" class="t-meta">HAUL ROAD · 大件成品陆运</text>
+      <text x="300" y="612" class="t-meta">{t("map.haulRoad")}</text>
       {[0, 1].map((i) => (
         <g class="truck">
           <rect x="-13" y="-6" width="20" height="12" rx="1.5" fill="#2c3a44" stroke="var(--power)" stroke-opacity=".55" />
@@ -231,7 +234,7 @@ const colorOf: Record<Accent, string> = {
 
           {/* name + role */}
           <text x={x + 42} y={y + 23} class="t-name">{a.name}</text>
-          <text x={x + 10} y={y + 44} class="t-role">{a.role}</text>
+          <text x={x + 10} y={y + 44} class="t-role">{t(`map.role.${a.id}` as UIKey)}</text>
 
           {/* load gauge */}
           <rect x={x + 10} y={y + 56} width={BW - 20} height="6" fill="#0a1014" stroke="#2c3a44" />
@@ -273,7 +276,7 @@ const colorOf: Record<Accent, string> = {
     <g class="callout">
       <path d="M745,268 L790,238" stroke="var(--power)" stroke-opacity=".5" stroke-width="1" />
       <rect x="788" y="196" width="176" height="46" fill="#0b1115" fill-opacity=".95" stroke="var(--power)" stroke-opacity=".45" />
-      <text x="798" y="212" class="t-meta" fill="var(--power)">FORGE · 代码锻造厂</text>
+      <text x="798" y="212" class="t-meta" fill="var(--power)">{t("map.forgeTag")}</text>
       <text x="798" y="226" class="t-meta">THROUGHPUT 41 art/h</text>
       <text x="798" y="237" class="t-meta">POWER DRAW 3.2k tok/min</text>
     </g>

@@ -1,29 +1,77 @@
 ---
 // Sandbox — static shell around the interactive React island
-import SandboxCanvas from "./sandbox/SandboxCanvas.tsx";
+import SandboxCanvas, {
+  type SandboxStrings,
+} from "./sandbox/SandboxCanvas.tsx";
 import "../styles/sandbox.css";
+import { getLangFromUrl, useTranslations } from "../i18n";
+
+const t = useTranslations(getLangFromUrl(Astro.url));
 
 const legend = [
-  { c: "var(--data)", t: "资料 / 上下文" },
-  { c: "var(--plasma)", t: "计划 / 施工图" },
-  { c: "var(--power)", t: "构建 / 产出" },
-  { c: "var(--warn)", t: "返工回路" },
+  { c: "var(--data)", t: t("sandbox.legend.data") },
+  { c: "var(--plasma)", t: t("sandbox.legend.plasma") },
+  { c: "var(--power)", t: t("sandbox.legend.power") },
+  { c: "var(--warn)", t: t("sandbox.legend.warn") },
 ];
+
+const strings: SandboxStrings = {
+  mode: {
+    select: t("sandbox.mode.select"),
+    connect: t("sandbox.mode.connect"),
+    delete: t("sandbox.mode.delete"),
+  },
+  hint: {
+    select: t("sandbox.hint.select"),
+    connect: t("sandbox.hint.connect"),
+    delete: t("sandbox.hint.delete"),
+  },
+  roles: {
+    intake: t("map.role.intake"),
+    planner: t("map.role.planner"),
+    research: t("map.role.research"),
+    forge: t("map.role.forge"),
+    critic: t("map.role.critic"),
+    shipyard: t("map.role.shipyard"),
+    depot: t("map.role.depot"),
+  },
+  reset: t("sandbox.reset"),
+  tokens: t("sandbox.tokens"),
+  dispatch: t("sandbox.dispatch"),
+  dispatching: t("sandbox.dispatching"),
+  touchHint: t("sandbox.touchHint"),
+  inspector: t("sandbox.inspector"),
+  load: t("sandbox.load"),
+  throughput: t("sandbox.throughput"),
+  inbound: t("sandbox.inbound"),
+  outbound: t("sandbox.outbound"),
+  status: {
+    idle: t("sandbox.status.idle"),
+    blocked: t("sandbox.status.blocked"),
+    shipped: t("sandbox.status.shipped"),
+    rework: t("sandbox.status.rework"),
+    noRoute: t("sandbox.status.noRoute"),
+    inTransit: t("sandbox.status.inTransit"),
+    restored: t("sandbox.status.restored"),
+    plantRemoved: t("sandbox.status.plantRemoved"),
+    pipeRemoved: t("sandbox.status.pipeRemoved"),
+    pipeExists: t("sandbox.status.pipeExists"),
+    pipeAdded: t("sandbox.status.pipeAdded"),
+    connectFrom: t("sandbox.status.connectFrom"),
+  },
+};
 ---
 
 <section id="sandbox">
   <div class="shell">
-    <span class="stencil">交互沙盘</span>
-    <h2 class="h-sec">直接上手，把产线改成你的样子</h2>
-    <p class="sub-sec">
-      拖动厂房、铺设管道、拆掉不需要的工序，然后按下「派发任务」——工件会沿着你搭出来的拓扑一路走到成品仓库，
-      token 按段扣费，质检不通过就原路返工。
-    </p>
+    <span class="stencil">{t("sandbox.stencil")}</span>
+    <h2 class="h-sec">{t("sandbox.title")}</h2>
+    <p class="sub-sec">{t("sandbox.sub")}</p>
 
     <div class="sb-wrap">
       {/* client:idle, not client:visible — astro-island is display:contents, so its
           observed rect is 0×0 and the visibility observer never fires. */}
-      <SandboxCanvas client:idle />
+      <SandboxCanvas client:idle strings={strings} />
     </div>
 
     <ul class="sb-legend">

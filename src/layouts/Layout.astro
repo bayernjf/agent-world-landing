@@ -1,25 +1,25 @@
 ---
 import "../styles/global.css";
+import SEO from "../components/SEO.astro";
+import { getLangFromUrl } from "../i18n";
+
+const lang = getLangFromUrl(Astro.url);
 
 interface Props {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
 }
 
 const { title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang={lang === "zh" ? "zh-CN" : "en"}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <SEO lang={lang} url={Astro.url} title={title} description={description} />
     <meta name="theme-color" content="#06090b" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
@@ -55,6 +55,8 @@ const { title, description } = Astro.props;
         }
         if (tokens) {
           t += Math.floor(Math.random() * 90) - 30;
+          // A machine readout, so the grouping stays fixed rather than
+          // following the page locale.
           tokens.textContent = t.toLocaleString("en-US");
         }
       }, 1000);

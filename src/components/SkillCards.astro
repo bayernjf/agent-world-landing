@@ -1,22 +1,24 @@
 ---
 // SkillCards — Age of Empires style tech tree: 6 branches x 4 tiers = 24 skill cards.
 // Same-branch prerequisites are drawn as connector lines; cross-branch ones render as tags.
+// Names, descriptions and effects live in the copy dictionary, keyed by skill id.
+import { getLangFromUrl, useTranslations, fmt, type UIKey } from "../i18n";
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+
 interface Skill {
-  name: string;
-  desc: string;
+  /** stable key: the tech graph and the copy dictionary both hang off this */
+  id: string;
   icon: string;
   cost: string;
   prereq: string[];
-  effect: string;
   active: boolean;
 }
 
 interface Branch {
   key: string;
-  label: string;
   code: string;
   accent: string;
-  blurb: string;
   /** exactly four, one per tier T1..T4 */
   skills: Skill[];
 }
@@ -24,315 +26,255 @@ interface Branch {
 const branches: Branch[] = [
   {
     key: "orchestration",
-    label: "调度",
     code: "ORCHESTRATION",
     accent: "var(--plasma)",
-    blurb: "决定谁在什么时候干什么",
     skills: [
       {
-        name: "任务解构",
-        desc: "把复杂指令自动拆成带依赖的子任务。",
+        id: "orch.decompose",
         icon: "M",
         cost: "1,200",
         prereq: [],
-        effect: "拆解效率 +40%",
         active: true,
       },
       {
-        name: "并行锻造",
-        desc: "无依赖工序同时开工，不再排队等待。",
+        id: "orch.parallel",
         icon: "II",
         cost: "4,800",
-        prereq: ["任务解构"],
-        effect: "并行度 +3",
+        prereq: ["orch.decompose"],
         active: true,
       },
       {
-        name: "动态排产",
-        desc: "按实时负载与预算重排工序优先级。",
+        id: "orch.schedule",
         icon: "⇄",
         cost: "14,000",
-        prereq: ["并行锻造", "管道优化"],
-        effect: "空转时间 −55%",
+        prereq: ["orch.parallel", "infra.pipeline"],
         active: true,
       },
       {
-        name: "自适应路由",
-        desc: "任务自动落到当前最合适的那座厂房。",
+        id: "orch.route",
         icon: "◎",
         cost: "42,000",
-        prereq: ["动态排产", "跨厂共识"],
-        effect: "满载作业率 99.7%",
+        prereq: ["orch.schedule", "intel.consensus"],
         active: false,
       },
     ],
   },
   {
     key: "fabrication",
-    label: "生产",
     code: "FABRICATION",
     accent: "var(--power)",
-    blurb: "把计划变成真正的产物",
     skills: [
       {
-        name: "模板铸造",
-        desc: "高频产物走预制模板，跳过从零生成。",
+        id: "fab.template",
         icon: "□",
         cost: "900",
         prereq: [],
-        effect: "首件耗时 −30%",
         active: true,
       },
       {
-        name: "增量锻造",
-        desc: "只重建被改动的部分，其余直接复用。",
+        id: "fab.incremental",
         icon: "⊞",
         cost: "5,200",
-        prereq: ["模板铸造"],
-        effect: "重建成本 −64%",
+        prereq: ["fab.template"],
         active: true,
       },
       {
-        name: "多模工厂",
-        desc: "同一座厂房按工序难度切换推理模型。",
+        id: "fab.multimodel",
         icon: "△",
         cost: "18,000",
-        prereq: ["增量锻造", "记忆蒸馏"],
-        effect: "弹性推理成本",
+        prereq: ["fab.incremental", "intel.distill"],
         active: false,
       },
       {
-        name: "熔炉超频",
-        desc: "为高优任务临时超配算力，代价是电费。",
+        id: "fab.overclock",
         icon: "◆",
         cost: "56,000",
-        prereq: ["多模工厂", "蓄能电池"],
-        effect: "峰值吞吐 ×2.4",
+        prereq: ["fab.multimodel", "infra.battery"],
         active: false,
       },
     ],
   },
   {
     key: "quality",
-    label: "质检",
     code: "QUALITY",
     accent: "var(--ok)",
-    blurb: "不合格的东西别想出厂",
     skills: [
       {
-        name: "代码质检",
-        desc: "自动检视产出并标记潜在风险点。",
+        id: "qa.lint",
         icon: "Q",
         cost: "3,200",
         prereq: [],
-        effect: "质检覆盖率 92%",
         active: true,
       },
       {
-        name: "回归靶场",
-        desc: "每批产出都跑一遍历史用例再放行。",
+        id: "qa.regression",
         icon: "⊙",
         cost: "6,400",
-        prereq: ["代码质检"],
-        effect: "回归逃逸 −78%",
+        prereq: ["qa.lint"],
         active: true,
       },
       {
-        name: "返工闭环",
-        desc: "不合格件自动回流上游重造，无需人工。",
+        id: "qa.rework",
         icon: "↻",
         cost: "16,000",
-        prereq: ["回归靶场"],
-        effect: "一次通过率 88%",
+        prereq: ["qa.regression"],
         active: true,
       },
       {
-        name: "形式校验",
-        desc: "对关键路径做形式化证明而非抽样测试。",
+        id: "qa.formal",
         icon: "⊗",
         cost: "72,000",
-        prereq: ["返工闭环", "知识矿脉"],
-        effect: "严重缺陷趋零",
+        prereq: ["qa.rework", "intel.index"],
         active: false,
       },
     ],
   },
   {
     key: "intel",
-    label: "情报",
     code: "INTELLIGENCE",
     accent: "var(--data)",
-    blurb: "让厂房知道自己在干什么",
     skills: [
       {
-        name: "资料勘探",
-        desc: "按需抓取外部资料并归档进厂内料场。",
+        id: "intel.explore",
         icon: "○",
         cost: "1,600",
         prereq: [],
-        effect: "检索命中率 +45%",
         active: true,
       },
       {
-        name: "记忆蒸馏",
-        desc: "从历史作业里提炼可复用的结论与教训。",
+        id: "intel.distill",
         icon: "◈",
         cost: "7,800",
-        prereq: ["资料勘探"],
-        effect: "上下文压缩比 7:1",
+        prereq: ["intel.explore"],
         active: true,
       },
       {
-        name: "知识矿脉",
-        desc: "私有库建成常驻索引，开工即可查阅。",
+        id: "intel.index",
         icon: "≡",
         cost: "21,000",
-        prereq: ["记忆蒸馏"],
-        effect: "冷启动 −80%",
+        prereq: ["intel.distill"],
         active: false,
       },
       {
-        name: "跨厂共识",
-        desc: "多座厂房交叉验证同一事实后才采信。",
+        id: "intel.consensus",
         icon: "✦",
         cost: "64,000",
-        prereq: ["知识矿脉", "回归靶场"],
-        effect: "事实错误率 0.3%",
+        prereq: ["intel.index", "qa.regression"],
         active: false,
       },
     ],
   },
   {
     key: "infra",
-    label: "基建",
     code: "INFRASTRUCTURE",
     accent: "var(--warn)",
-    blurb: "电力、管道和不许停机",
     skills: [
       {
-        name: "电网扩容",
-        desc: "提高全厂 token 供应上限与瞬时功率。",
+        id: "infra.grid",
         icon: "≋",
         cost: "1,000",
         prereq: [],
-        effect: "装机容量 +8k",
         active: true,
       },
       {
-        name: "管道优化",
-        desc: "按下游饥饿程度动态分配 token 流量。",
+        id: "infra.pipeline",
         icon: "⊥",
         cost: "8,000",
-        prereq: ["电网扩容"],
-        effect: "吞吐量 +60%",
+        prereq: ["infra.grid"],
         active: true,
       },
       {
-        name: "蓄能电池",
-        desc: "闲时把余量存起来，峰值再放出去。",
+        id: "infra.battery",
         icon: "▲",
         cost: "19,000",
-        prereq: ["管道优化"],
-        effect: "峰值成本 −38%",
+        prereq: ["infra.pipeline"],
         active: false,
       },
       {
-        name: "自愈集群",
-        desc: "厂房故障自动迁移产线，升级不停机。",
+        id: "infra.selfheal",
         icon: "✧",
         cost: "88,000",
-        prereq: ["蓄能电池", "多线交付"],
-        effect: "SLA 99.99%",
+        prereq: ["infra.battery", "ship.multi"],
         active: false,
       },
     ],
   },
   {
     key: "delivery",
-    label: "交付",
     code: "DELIVERY",
     accent: "color-mix(in srgb, var(--data) 55%, var(--plasma))",
-    blurb: "成品怎么运到用户手上",
     skills: [
       {
-        name: "成品入库",
-        desc: "产出自动归档进 DEPOT 并生成清单。",
+        id: "ship.depot",
         icon: "⇩",
         cost: "1,400",
         prereq: [],
-        effect: "检索耗时 −50%",
         active: true,
       },
       {
-        name: "灰度出货",
-        desc: "分批放量，指标异常就自动回滚。",
+        id: "ship.canary",
         icon: "⊕",
         cost: "6,800",
-        prereq: ["成品入库"],
-        effect: "回滚耗时 12s",
+        prereq: ["ship.depot"],
         active: false,
       },
       {
-        name: "陆运车队",
-        desc: "大件产物改走批量陆运，省管道带宽。",
+        id: "ship.fleet",
         icon: "⇉",
         cost: "17,500",
-        prereq: ["灰度出货"],
-        effect: "批量交付 ×5",
+        prereq: ["ship.canary"],
         active: false,
       },
       {
-        name: "多线交付",
-        desc: "同一批成品并行发往多个目标环境。",
+        id: "ship.multi",
         icon: "★",
         cost: "60,000",
-        prereq: ["陆运车队", "返工闭环"],
-        effect: "环境漂移归零",
+        prereq: ["ship.fleet", "qa.rework"],
         active: false,
       },
     ],
   },
 ];
 
-const tiers = [
-  { id: "T1", label: "起步" },
-  { id: "T2", label: "扩产" },
-  { id: "T3", label: "精益" },
-  { id: "T4", label: "满产" },
-];
+const tiers = ["T1", "T2", "T3", "T4"] as const;
 
 const unlocked = branches.reduce(
   (n, b) => n + b.skills.filter((s) => s.active).length,
   0
 );
 const total = branches.reduce((n, b) => n + b.skills.length, 0);
+
+// Cross-branch prerequisites are referenced by id, so the tag needs a way back
+// to the display name.
+const nameById = new Map(
+  branches.flatMap((b) =>
+    b.skills.map((s) => [s.id, t(`skills.${s.id}.name` as UIKey)] as const)
+  )
+);
 ---
 
 <section id="skills" class="shell">
-  <span class="stencil">技能树</span>
-  <h2 class="h-sec">每个 Agent 都是一座工厂</h2>
-  <p class="sub-sec">
-    像 RTS 游戏一样解锁科技。六条分支、四个阶段，共 {total} 张技能卡；同一分支的前置用连线表示，
-    跨分支的前置会标在卡面上。
-  </p>
+  <span class="stencil">{t("skills.stencil")}</span>
+  <h2 class="h-sec">{t("skills.title")}</h2>
+  <p class="sub-sec">{fmt(t("skills.sub"), { total })}</p>
 
   <div class="tree-meta">
     <span class="tree-meta__count readout">{unlocked} / {total}</span>
-    <span class="tree-meta__label">已解锁</span>
+    <span class="tree-meta__label">{t("skills.unlocked")}</span>
     <div class="gauge tree-meta__gauge">
       <i style={`width:${(unlocked / total) * 100}%`}></i>
     </div>
-    <span class="tree-meta__pan">左右拖动查看完整科技树</span>
+    <span class="tree-meta__pan">{t("skills.pan")}</span>
   </div>
 
   <div class="tree-scroll">
     <div class="tree">
       <div class="tree__tiers">
         {
-          tiers.map((t) => (
+          tiers.map((tier) => (
             <div class="tree__tier">
-              <span class="tree__tier-id">{t.id}</span>
-              <span class="tree__tier-label">{t.label}</span>
+              <span class="tree__tier-id">{tier}</span>
+              <span class="tree__tier-label">{t(`skills.tier.${tier}` as UIKey)}</span>
             </div>
           ))
         }
@@ -342,32 +284,32 @@ const total = branches.reduce((n, b) => n + b.skills.length, 0);
         branches.map((b) => (
           <div class="tree__branch" style={`--accent:${b.accent}`}>
             <div class="tree__head">
-              <span class="tree__head-label">{b.label}</span>
+              <span class="tree__head-label">{t(`skills.branch.${b.key}.label` as UIKey)}</span>
               <span class="tree__head-code">{b.code}</span>
-              <span class="tree__head-blurb">{b.blurb}</span>
+              <span class="tree__head-blurb">{t(`skills.branch.${b.key}.blurb` as UIKey)}</span>
             </div>
 
             <div class="tree__row">
               {b.skills.map((s, i) => {
-                const own = b.skills.map((x) => x.name);
+                const own = b.skills.map((x) => x.id);
                 const crossed = s.prereq.filter((p) => !own.includes(p));
                 return (
                   <div
                     class:list={["tech", { "tech--locked": !s.active }]}
-                    data-tier={tiers[i].id}
+                    data-tier={tiers[i]}
                   >
                     {i > 0 && <span class="tech__link" aria-hidden="true"></span>}
                     <div class="tech__top">
                       <span class="tech__icon" aria-hidden="true">{s.icon}</span>
-                      <span class="tech__tier">{tiers[i].id}</span>
+                      <span class="tech__tier">{tiers[i]}</span>
                     </div>
-                    <h3 class="tech__name">{s.name}</h3>
-                    <p class="tech__desc">{s.desc}</p>
+                    <h3 class="tech__name">{t(`skills.${s.id}.name` as UIKey)}</h3>
+                    <p class="tech__desc">{t(`skills.${s.id}.desc` as UIKey)}</p>
                     {crossed.length > 0 && (
                       <div class="tech__prereq">
-                        <span class="tech__prereq-hint">需</span>
+                        <span class="tech__prereq-hint">{t("skills.prereqHint")}</span>
                         {crossed.map((p) => (
-                          <span class="tech__prereq-tag">{p}</span>
+                          <span class="tech__prereq-tag">{nameById.get(p)}</span>
                         ))}
                       </div>
                     )}
@@ -376,9 +318,9 @@ const total = branches.reduce((n, b) => n + b.skills.length, 0);
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--power)" stroke-width="2"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
                         {s.cost}
                       </span>
-                      <span class="tech__effect">{s.effect}</span>
+                      <span class="tech__effect">{t(`skills.${s.id}.effect` as UIKey)}</span>
                     </div>
-                    {!s.active && <span class="tech__lock" title="未解锁">LOCKED</span>}
+                    {!s.active && <span class="tech__lock" title={t("skills.lockedTitle")}>LOCKED</span>}
                   </div>
                 );
               })}
