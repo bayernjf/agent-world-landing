@@ -44,7 +44,7 @@ import Logo from "./Logo.astro";
       </div>
       <div class="hud__ext">
         <BayjfLink size={17} />
-        <StarOnGithub href="https://github.com/bayernjf/agent-world" size={14} label="GitHub" />
+        <StarOnGithub href="https://github.com/bayernjf/agent-world" size={15} />
       </div>
     </div>
   </div>
@@ -152,13 +152,13 @@ import Logo from "./Logo.astro";
     .hud__group--right .hud__stat:first-child { display: none; }
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1000px) {
     /* icons still identify the readouts, so the word labels can go next */
     .hud__res .hud__label { display: none; }
     .hud__group { gap: 16px; }
   }
 
-  @media (max-width: 800px) {
+  @media (max-width: 900px) {
     /* out of room in the bar; the footer still carries both links */
     .hud__ext { display: none; }
   }
