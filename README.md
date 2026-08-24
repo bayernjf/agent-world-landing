@@ -30,27 +30,31 @@ npm run dev
 npm run build
 ```
 
-`astro build` 之后会自动跑 `scripts/shot.mjs`：在 `dist/` 上起一个静态服务，用 Playwright
-截取两种语言的首屏，产出 `dist/preview-en.png` 与 `dist/preview-zh.png` 作为 og:image。
-首次构建前需要装一次浏览器内核：
-
-```bash
-npx playwright install chromium
-```
-
 其他脚本：
 
 ```bash
 npm run preview   # 预览 dist
 npm run check     # astro check 类型检查
-npm run shot      # 只重截预览图（需要 dist 已存在）
+npm run shot      # 重新生成 og:image 预览图（需要先 build）
 ```
+
+### og:image 预览图
+
+`public/preview-en.png` 与 `public/preview-zh.png` 是提交进仓库的，云端构建不参与生成——
+否则每次构建都要下载一个 chromium。改了首屏视觉之后手动重生一次并提交：
+
+```bash
+npx playwright install chromium   # 只需第一次
+npm run build && npm run shot
+```
+
+`scripts/shot.mjs` 会在 `dist/` 上起静态服务，用 Playwright 截 1280×800@2x 首屏，写回 `public/`。
 
 ## 目录结构
 
 ```
-public/            favicon、robots.txt、llms.txt / llms-en.txt
-scripts/shot.mjs   构建后截取 og:image
+public/            favicon、robots.txt、llms.txt / llms-en.txt、og:image 预览图
+scripts/shot.mjs   本地重新生成 og:image
 src/consts.ts      站点级常量（域名、社交、og 图路径）
 src/i18n/          ui.ts 文案字典 + index.ts 语言工具
 src/layouts/       Layout.astro（head、reveal 脚本、CRT 层）
@@ -63,8 +67,10 @@ src/styles/        global.css
 ## 部署到 Cloudflare Pages（Git 集成）
 
 1. 代码推到 GitHub 仓库 `bayernjf/agent-world-landing`。
-2. Cloudflare Dashboard → Workers & Pages → Create application → Pages → Connect to Git，
-   选中该仓库。
+2. Cloudflare Dashboard → 侧边栏 **Compute (Workers)** / Workers & Pages → Create →
+   切到 **Pages** 页签 → Connect to Git，选中该仓库。
+   Cloudflare 已把 Pages 并入 Workers，新建入口比较隐蔽；如果面板里找不到 Pages 页签，
+   就走 Workers + Static Assets（同样连 Git，构建产物目录填 `dist`，效果一致）。
 3. 构建配置：
    - Framework preset：`Astro`
    - Build command：`npm run build`
@@ -72,9 +78,9 @@ src/styles/        global.css
    - Environment variable：`NODE_VERSION = 22`
 4. Save and Deploy。
 
-Cloudflare Pages 构建 `main` 分支，日常开发在 `dev` 分支进行，合并到 `main` 才会发版。
+Cloudflare 构建 `main` 分支，日常开发在 `dev` 分支进行，合并到 `main` 才会发版。
 
-自定义域名：Pages 项目 → Custom domains → 添加 `agent-world.bayjf.com`，按提示配置 CNAME。
+自定义域名：项目 → Custom domains → 添加 `agent-world.bayjf.com`，按提示配置 CNAME。
 换域名时要同步改 `src/consts.ts` 的 `SITE_URL` 和 `public/robots.txt` 里的 Sitemap 地址。
 
 ## SEO

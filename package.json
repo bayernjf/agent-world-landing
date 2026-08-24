@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/shot.mjs",
+    "build": "astro build",
     "shot": "node scripts/shot.mjs",
     "check": "astro check",
     "preview": "astro preview"
