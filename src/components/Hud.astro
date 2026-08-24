@@ -1,5 +1,7 @@
 ---
 // RTS‑style HUD bar: resources, time, minimap hint
+import BayjfLink from "@bay/landing-ui/components/BayjfLink.astro";
+import StarOnGithub from "@bay/landing-ui/components/StarOnGithub.astro";
 import Logo from "./Logo.astro";
 ---
 
@@ -39,6 +41,10 @@ import Logo from "./Logo.astro";
       </div>
       <div class="hud__stat">
         <span class="readout" id="res-clock">14:28:07</span>
+      </div>
+      <div class="hud__ext">
+        <BayjfLink size={17} />
+        <StarOnGithub href="https://github.com/bayernjf/agent-world" size={14} label="GitHub" />
       </div>
     </div>
   </div>
@@ -121,11 +127,44 @@ import Logo from "./Logo.astro";
   .hud__stat .readout {
     font-size: 11px;
   }
+  .hud__ext {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-left: 18px;
+    border-left: 1px solid var(--steel-600);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-dim);
+  }
+  /* :global, because these anchors come from @bay/landing-ui and so carry that
+     component's scope attribute rather than this one's */
+  .hud__ext :global(a) {
+    transition: color 160ms ease-out;
+  }
+  .hud__ext :global(a:hover) {
+    color: var(--data);
+  }
+
+  @media (max-width: 1100px) {
+    /* the decorative status readout yields first, so the brand links survive longer */
+    .hud__group--right .hud__stat:first-child { display: none; }
+  }
+
+  @media (max-width: 900px) {
+    /* icons still identify the readouts, so the word labels can go next */
+    .hud__res .hud__label { display: none; }
+    .hud__group { gap: 16px; }
+  }
+
+  @media (max-width: 800px) {
+    /* out of room in the bar; the footer still carries both links */
+    .hud__ext { display: none; }
+  }
 
   @media (max-width: 720px) {
     .hud__inner { height: 44px; }
-    .hud__res .hud__label { display: none; }
-    .hud__group--right .hud__stat:first-child { display: none; }
     .hud__logo { font-size: 12px; letter-spacing: 0.2em; }
     .hud__brand { gap: 7px; --logo-size: 19px; }
     /* the brand now owns the left slot, so the bar can only carry one readout */

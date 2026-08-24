@@ -1,4 +1,6 @@
 ---
+import BayjfLink from "@bay/landing-ui/components/BayjfLink.astro";
+import StarOnGithub from "@bay/landing-ui/components/StarOnGithub.astro";
 import Logo from "./Logo.astro";
 
 const year = 2026;
@@ -20,6 +22,10 @@ const year = 2026;
       <a href="#skills">技能树</a>
       <a href="#cta">内测申请</a>
     </nav>
+    <div class="foot__ext">
+      <BayjfLink size={16} />
+      <StarOnGithub href="https://github.com/bayernjf/agent-world" size={14} label="GitHub" />
+    </div>
     <div class="foot__meta">
       <span class="readout">v0.1.0-alpha</span>
       <span>© {year} Agent World</span>
@@ -78,6 +84,22 @@ const year = 2026;
     font-family: var(--mono);
     font-size: 10px;
     color: var(--ink-faint);
+  }
+  .foot__ext {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+  /* :global, because these anchors come from @bay/landing-ui and so carry that
+     component's scope attribute rather than this one's */
+  .foot__ext :global(a) {
+    transition: color 160ms ease-out;
+  }
+  .foot__ext :global(a:hover) {
+    color: var(--data);
   }
 
   @media (max-width: 700px) {
