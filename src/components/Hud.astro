@@ -1,5 +1,6 @@
 ---
 // RTS‑style HUD bar: resources, time, minimap hint
+import Logo from "./Logo.astro";
 ---
 
 <header class="hud">
@@ -25,6 +26,7 @@
 
     <!-- center: title -->
     <div class="hud__brand">
+      <Logo />
       <span class="hud__logo">AGENT&thinsp;WORLD</span>
       <span class="led" data-c="power" aria-hidden="true"></span>
     </div>
@@ -94,7 +96,8 @@
   .hud__brand {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 9px;
+    --logo-size: 20px;
   }
   .hud__logo {
     font-family: var(--mono);
@@ -123,5 +126,6 @@
     .hud__res .hud__label { display: none; }
     .hud__group--right .hud__stat:first-child { display: none; }
     .hud__logo { font-size: 12px; letter-spacing: 0.2em; }
+    .hud__brand { gap: 7px; --logo-size: 17px; }
   }
 </style>

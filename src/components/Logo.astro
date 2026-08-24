@@ -1,0 +1,31 @@
+---
+// Reactor-core mark. Size is set by the caller via the inherited --logo-size
+// custom property — a class from the parent component would not match this
+// root svg, since Astro scopes styles per component.
+---
+
+<svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <path
+    d="M16 2.6 28 9.3v13.4L16 29.4 4 22.7V9.3z"
+    fill="var(--steel-800)"
+    stroke="var(--steel-400)"
+    stroke-width="1.6"
+    stroke-linejoin="round"></path>
+  <path
+    d="M16 8.4 22.6 12.2v7.6L16 23.6 9.4 19.8v-7.6z"
+    stroke="var(--data)"
+    stroke-width="1.2"
+    opacity="0.55"></path>
+  <g transform="translate(11.9 9) scale(0.875)">
+    <path d="M6 0 0 9h4l-1 7 7-10H5.5z" fill="var(--power)"></path>
+  </g>
+</svg>
+
+<style>
+  .logo {
+    flex: none;
+    width: var(--logo-size, 22px);
+    height: var(--logo-size, 22px);
+    max-width: none;
+  }
+</style>

@@ -1,11 +1,16 @@
 ---
+import Logo from "./Logo.astro";
+
 const year = 2026;
 ---
 
 <footer class="foot">
   <div class="shell foot__inner">
     <div class="foot__brand">
-      <span class="foot__logo">AGENT&thinsp;WORLD</span>
+      <span class="foot__mark-row">
+        <Logo />
+        <span class="foot__logo">AGENT&thinsp;WORLD</span>
+      </span>
       <p class="foot__tag">游戏化的多智能体编排工作台</p>
     </div>
     <nav class="foot__nav">
@@ -34,6 +39,12 @@ const year = 2026;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+  }
+  .foot__mark-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    --logo-size: 24px;
   }
   .foot__logo {
     font-family: var(--mono);
