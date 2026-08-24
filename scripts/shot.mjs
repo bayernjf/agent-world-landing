@@ -5,8 +5,6 @@ import { extname, join, normalize } from "node:path";
 import { chromium } from "playwright";
 
 const DIST = "dist";
-// the shots are committed to the repo, so the cloud build never needs chromium
-const OUT = "public";
 // 5173 is a popular dev port; a stray tab on it would silently break the build
 const PORT = 5183;
 const VIEWPORT = { width: 1280, height: 800 };
@@ -54,8 +52,8 @@ const targets = [
 ].filter((t) => existsSync(join(DIST, t.url === "/" ? "index.html" : `${t.url}index.html`)));
 
 if (!targets.length) {
-  console.log("[shot] no built pages found, run `npm run build` first");
-  process.exit(1);
+  console.log("[shot] no built pages found, skipping");
+  process.exit(0);
 }
 
 await new Promise((resolve) => server.listen(PORT, resolve));
@@ -70,12 +68,12 @@ for (const target of targets) {
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(500);
   await page.screenshot({
-    path: join(OUT, target.out),
+    path: join(DIST, target.out),
     clip: { x: 0, y: 0, ...VIEWPORT },
     animations: "disabled",
     caret: "hide",
   });
-  console.log(`[shot] ${join(OUT, target.out)}`);
+  console.log(`[shot] ${target.out}`);
 }
 
 await browser.close();
