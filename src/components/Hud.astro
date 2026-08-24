@@ -3,12 +3,17 @@
 import BayjfLink from "@bay/landing-ui/components/BayjfLink.astro";
 import StarOnGithub from "@bay/landing-ui/components/StarOnGithub.astro";
 import Logo from "./Logo.astro";
+import { getLangFromUrl, useTranslations, getAltLangPath, localizePath } from "../i18n";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const altPath = getAltLangPath(Astro.url, lang);
 ---
 
 <header class="hud">
   <div class="hud__inner shell">
     <!-- left: brand -->
-    <a class="hud__brand" href="#top" aria-label="Agent World 首页">
+    <a class="hud__brand" href={localizePath("/", lang)} aria-label={t("hud.home")}>
       <Logo />
       <span class="hud__logo">AGENT&thinsp;WORLD</span>
       <span class="led" data-c="power" aria-hidden="true"></span>
@@ -46,6 +51,11 @@ import Logo from "./Logo.astro";
         <BayjfLink size={17} />
         <StarOnGithub href="https://github.com/bayernjf/agent-world" size={15} />
       </div>
+      <!-- outside .hud__ext: the switch is functional, so it survives every
+           breakpoint where the decorative brand links do not -->
+      <a class="lang-switch" href={altPath} hreflang={lang === "zh" ? "en" : "zh-CN"}>
+        {t("nav.langSwitch")}
+      </a>
     </div>
   </div>
   <!-- bottom border glow -->
@@ -169,5 +179,15 @@ import Logo from "./Logo.astro";
     .hud__brand { gap: 7px; --logo-size: 19px; }
     /* the brand now owns the left slot, so the bar can only carry one readout */
     .hud__res:not(:first-child) { display: none; }
+  }
+
+  @media (max-width: 560px) {
+    /* the switch needs the room and the clock is the most decorative readout */
+    .hud__group--right .hud__stat { display: none; }
+  }
+
+  @media (max-width: 360px) {
+    /* brand + switch only; every readout has yielded */
+    .hud__group:not(.hud__group--right) { display: none; }
   }
 </style>

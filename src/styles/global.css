@@ -41,6 +41,12 @@
 
     --hair: 1px solid var(--steel-600);
   }
+
+  /* PingFang renders Latin text noticeably lighter and wider than the system UI
+     face, so the English pages lead with the native stack instead. */
+  :root:lang(en) {
+    --sans: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
 }
 
 *,
@@ -300,6 +306,26 @@ section {
   font-family: var(--mono);
   font-variant-numeric: tabular-nums;
   font-weight: 700;
+}
+
+/* locale toggle — shared by the HUD bar and the footer */
+.lang-switch {
+  flex: none;
+  padding: 3px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+  border: 1px solid var(--steel-600);
+  background: var(--steel-900);
+  box-shadow: var(--bevel);
+  transition:
+    color 0.16s,
+    border-color 0.16s;
+}
+.lang-switch:hover {
+  color: var(--data);
+  border-color: var(--data-dim);
 }
 
 /* thin capacity bar */
