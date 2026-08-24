@@ -1,7 +1,6 @@
-<!-- Concept C — 反应堆核心：六边形 + 电力符号（已采用为产品 logo，无外框） -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#0a0f12"/>
-  <path d="M16 2.5 27.7 9.25v13.5L16 29.5 4.3 22.75V9.25z" fill="none" stroke="#35e0f0" stroke-width="1.7" stroke-linejoin="round" opacity=".9"/>
+<!-- Concept C — 反应堆核心：六边形 + 电力符号（已采用为产品 logo，无边框、无底板） -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <path d="M16 2.5 27.7 9.25v13.5L16 29.5 4.3 22.75V9.25z" stroke="#35e0f0" stroke-width="1.7" stroke-linejoin="round" opacity=".9"/>
   <g transform="translate(11.31 8.5) scale(0.9375)">
     <path d="M6 0 0 9h4l-1 7 7-10H5.5z" fill="#ffb020"/>
   </g>
