@@ -1,0 +1,48 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hud from "../components/Hud.astro";
+---
+
+<Layout>
+  <Hud />
+  <main class="lost">
+    <div class="shell">
+      <div class="panel panel--riveted lost__panel">
+        <div class="panel__bar">
+          <span>lot survey · 404</span>
+          <span class="led" data-c="alert"></span>
+        </div>
+        <div class="lost__body">
+          <p class="eyebrow">unmapped sector</p>
+          <h1 class="h-sec">This plot has no plant on it</h1>
+          <p class="sub-sec">
+            The address you requested is not on the site map. Head back to the
+            main base and pick a station from there.
+          </p>
+          <a class="btn" href="/">Back to base</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .lost {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    padding: 120px 0 96px;
+  }
+
+  .lost__panel {
+    max-width: 620px;
+  }
+
+  .lost__body {
+    padding: 32px 28px 34px;
+  }
+
+  .lost__body .btn {
+    margin-top: 28px;
+  }
+</style>
