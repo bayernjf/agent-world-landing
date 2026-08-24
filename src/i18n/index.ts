@@ -25,7 +25,7 @@ export function fmt(tpl: string, vars: Record<string, string | number>): string 
 /** The default locale is unprefixed, so `/` and `/zh/` are the only two shapes. */
 export function localizePath(path: string, lang: Lang): string {
   const clean = path.startsWith("/") ? path : `/${path}`;
-  return lang === defaultLang ? clean : `/${lang}${clean === "/" ? "" : clean}`;
+  return lang === defaultLang ? clean : `/${lang}${clean}`;
 }
 
 export function getOtherLang(lang: Lang): Lang {

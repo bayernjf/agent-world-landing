@@ -1,16 +1,26 @@
 ---
 import "../styles/global.css";
+import {
+  getLangFromUrl,
+  useTranslations,
+  getAltLangPath,
+  getOtherLang,
+} from "../i18n";
 
-interface Props {
-  title: string;
-  description: string;
-}
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
-const { title, description } = Astro.props;
+const title = t("meta.title");
+const description = t("meta.description");
+
+const altPath = getAltLangPath(Astro.url, lang);
+const altLang = getOtherLang(lang);
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const altUrl = new URL(altPath, Astro.site);
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang={lang === "zh" ? "zh-CN" : "en"}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,6 +30,11 @@ const { title, description } = Astro.props;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content={lang === "zh" ? "zh_CN" : "en_US"} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="alternate" hreflang={lang === "zh" ? "zh-CN" : "en"} href={canonical.href} />
+    <link rel="alternate" hreflang={altLang === "zh" ? "zh-CN" : "en"} href={altUrl.href} />
+    <link rel="alternate" hreflang="x-default" href={new URL("/", Astro.site).href} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
@@ -55,6 +70,8 @@ const { title, description } = Astro.props;
         }
         if (tokens) {
           t += Math.floor(Math.random() * 90) - 30;
+          // A machine readout, so the grouping stays fixed rather than
+          // following the page locale.
           tokens.textContent = t.toLocaleString("en-US");
         }
       }, 1000);
