@@ -1,0 +1,72 @@
+---
+// Sandbox — static shell around the interactive React island
+import SandboxCanvas from "./sandbox/SandboxCanvas.tsx";
+import "../styles/sandbox.css";
+
+const legend = [
+  { c: "var(--data)", t: "资料 / 上下文" },
+  { c: "var(--plasma)", t: "计划 / 施工图" },
+  { c: "var(--power)", t: "构建 / 产出" },
+  { c: "var(--warn)", t: "返工回路" },
+];
+---
+
+<section id="sandbox">
+  <div class="shell">
+    <span class="stencil">交互沙盘</span>
+    <h2 class="h-sec">直接上手，把产线改成你的样子</h2>
+    <p class="sub-sec">
+      拖动厂房、铺设管道、拆掉不需要的工序，然后按下「派发任务」——工件会沿着你搭出来的拓扑一路走到成品仓库，
+      token 按段扣费，质检不通过就原路返工。
+    </p>
+
+    <div class="sb-wrap">
+      {/* client:idle, not client:visible — astro-island is display:contents, so its
+          observed rect is 0×0 and the visibility observer never fires. */}
+      <SandboxCanvas client:idle />
+    </div>
+
+    <ul class="sb-legend">
+      {
+        legend.map((l) => (
+          <li>
+            <span class="sb-legend__dot" style={`--c:${l.c}`}></span>
+            {l.t}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .sb-wrap {
+    margin-top: 34px;
+  }
+
+  .sb-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 26px;
+    margin-top: 18px;
+    padding: 0;
+    list-style: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+
+  .sb-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .sb-legend__dot {
+    width: 16px;
+    height: 3px;
+    background: var(--c);
+    box-shadow: 0 0 9px var(--c);
+  }
+</style>

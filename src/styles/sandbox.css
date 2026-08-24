@@ -1,0 +1,346 @@
+/* ==========================================================================
+   Interactive sandbox island
+   ========================================================================== */
+
+.sb {
+  position: relative;
+  border: var(--hair);
+  background: linear-gradient(180deg, var(--steel-800), var(--steel-850));
+  box-shadow: var(--bevel), 0 20px 50px -20px rgba(0, 0, 0, 0.9);
+}
+
+/* ---------- toolbar ---------- */
+
+.sb__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, var(--steel-700), var(--steel-800));
+  border-bottom: var(--hair);
+}
+
+.sb__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sb__tool {
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  background: linear-gradient(180deg, var(--steel-700), var(--steel-850));
+  border: 1px solid var(--steel-500);
+  box-shadow: var(--bevel);
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+  cursor: pointer;
+  transition: color 0.16s, border-color 0.16s, box-shadow 0.2s;
+}
+
+.sb__tool:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: var(--data-dim);
+}
+
+.sb__tool.is-on {
+  color: var(--steel-950);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--data) 92%, white), var(--data));
+  border-color: color-mix(in srgb, var(--data) 60%, black);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 22px -8px var(--data);
+}
+
+.sb__tool:disabled {
+  opacity: 0.34;
+  cursor: not-allowed;
+}
+
+.sb__right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.sb__tokens {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  gap: 2px 10px;
+}
+
+.sb__tokens-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.sb__tokens-val {
+  font-size: 15px;
+  color: var(--power);
+  text-shadow: 0 0 14px var(--power-dim);
+}
+
+.sb__tokens-gauge {
+  grid-column: 1 / -1;
+  width: 148px;
+  margin-top: 4px;
+}
+
+.sb__dispatch {
+  padding: 12px 22px;
+}
+
+.sb__dispatch:disabled {
+  filter: saturate(0.35) brightness(0.75);
+  cursor: progress;
+}
+
+/* ---------- status strip ---------- */
+
+.sb__statusbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 20px;
+  padding: 8px 14px;
+  background: var(--steel-900);
+  border-bottom: var(--hair);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.sb__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink-dim);
+}
+.sb__status--run {
+  color: var(--data);
+}
+.sb__status--warn {
+  color: var(--warn);
+}
+.sb__status--error {
+  color: var(--alert);
+}
+.sb__status--done {
+  color: var(--ok);
+}
+
+.sb__hint {
+  color: var(--ink-faint);
+}
+
+/* ---------- canvas ---------- */
+
+.sb__canvas {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(120% 100% at 50% 0%, #0d1418, var(--steel-950) 70%);
+}
+
+.sb__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: none;
+}
+
+.sb__svg--connect .sb__plant,
+.sb__svg--delete .sb__plant {
+  cursor: crosshair;
+}
+.sb__svg--select .sb__plant {
+  cursor: grab;
+}
+.sb__svg--select .sb__plant:active {
+  cursor: grabbing;
+}
+
+.sb__pipe-hit {
+  cursor: crosshair;
+  pointer-events: stroke;
+}
+
+.sb__plant text {
+  pointer-events: none;
+  user-select: none;
+}
+
+.sb-t-name {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  fill: var(--ink);
+}
+.sb-t-tier {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.sb-t-role {
+  font-family: var(--sans);
+  font-size: 12px;
+  fill: var(--ink-dim);
+}
+.sb-t-meta {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  fill: var(--ink-faint);
+}
+
+.sb__plant.is-active .sb-t-meta {
+  fill: var(--power);
+}
+
+/* flowing current along the pipes — offset-path survives React re-renders
+   in a way SMIL animateMotion does not */
+.sb__flow {
+  animation: sbFlow 3.15s linear infinite;
+  offset-rotate: 0deg;
+}
+
+@keyframes sbFlow {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+.sb__smoke {
+  animation: sbSmoke 3.3s ease-out infinite;
+}
+
+@keyframes sbSmoke {
+  0% {
+    transform: translateY(0) scale(0.5);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-46px) scale(2.3);
+    opacity: 0;
+  }
+}
+
+.sb__led {
+  animation: blink 2.1s steps(1, end) infinite;
+}
+
+.sb__packet {
+  transition: opacity 0.25s;
+}
+
+/* ---------- inspector overlay ---------- */
+
+.sb__inspector {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: 260px;
+  backdrop-filter: blur(2px);
+}
+
+.sb__inspector-body {
+  padding: 14px;
+}
+
+.sb__insp-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.sb__insp-role {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-dim);
+}
+
+.sb__insp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: var(--hair);
+}
+
+.sb__insp-grid dt {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.sb__insp-grid dd {
+  margin: 3px 0 0;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ---------- narrow viewports: pin and pan, same as the hero map ---------- */
+
+@media (max-width: 1000px) {
+  .sb__canvas {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sb__svg {
+    width: 1100px;
+    /* global `svg { max-width: 100% }` would undo the pan width */
+    max-width: none;
+  }
+  .sb__inspector {
+    position: static;
+    width: auto;
+    border-top: var(--hair);
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .sb__right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sb__flow,
+  .sb__smoke,
+  .sb__led {
+    animation: none;
+  }
+  .sb__flow {
+    opacity: 0.6;
+  }
+}
