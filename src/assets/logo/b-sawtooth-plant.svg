@@ -1,0 +1,11 @@
+<!-- Concept B — 锯齿屋顶厂房：工厂轮廓 + 实心闪电（备选） -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#0a0f12"/>
+  <path d="M3 15V10l6 5V10l6 5V10l6 5V10l6 5v13H3z" fill="#1c262e" stroke="#566b78" stroke-width="1.1" stroke-linejoin="round"/>
+  <rect x="5.5" y="19" width="3" height="3.5" fill="#ffb020" opacity=".85"/>
+  <rect x="23.5" y="19" width="3" height="3.5" fill="#ffb020" opacity=".85"/>
+  <rect x="3" y="26.4" width="26" height="1.6" fill="#ffb020"/>
+  <g transform="translate(11.4 13) scale(0.9)">
+    <path d="M6 0 0 9h4l-1 7 7-10H5.5z" fill="#35e0f0"/>
+  </g>
+</svg>
