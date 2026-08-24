@@ -1,0 +1,75 @@
+---
+const year = 2026;
+---
+
+<footer class="foot">
+  <div class="shell foot__inner">
+    <div class="foot__brand">
+      <span class="foot__logo">AGENT&thinsp;WORLD</span>
+      <p class="foot__tag">游戏化的多智能体编排工作台</p>
+    </div>
+    <nav class="foot__nav">
+      <a href="#control">控制面板</a>
+      <a href="#pipeline">生产流程</a>
+      <a href="#sandbox">交互沙盘</a>
+      <a href="#skills">技能树</a>
+      <a href="#cta">内测申请</a>
+    </nav>
+    <div class="foot__meta">
+      <span class="readout">v0.1.0-alpha</span>
+      <span>© {year} Agent World</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    padding: 34px 0 40px;
+    border-top: 1px solid var(--steel-700);
+    background: var(--steel-900);
+  }
+  .foot__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .foot__logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.26em;
+    color: var(--ink-dim);
+  }
+  .foot__tag {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .foot__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+  .foot__nav a:hover {
+    color: var(--data);
+  }
+  .foot__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 700px) {
+    .foot__meta { align-items: flex-start; }
+  }
+</style>
