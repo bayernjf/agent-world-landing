@@ -1,5 +1,8 @@
 ---
 import FactoryMap from "./FactoryMap.astro";
+import { getLangFromUrl, useTranslations } from "../i18n";
+
+const t = useTranslations(getLangFromUrl(Astro.url));
 ---
 
 <section class="hero">
@@ -7,35 +10,32 @@ import FactoryMap from "./FactoryMap.astro";
     <div class="hero__head">
       <div class="hero__badge">
         <span class="led" data-c="power" aria-hidden="true"></span>
-        <span>ALPHA · 内测招募中</span>
+        <span>{t("hero.badge")}</span>
       </div>
       <h1 class="hero__title">
-        把多智能体编排<br />
-        变成一场<span class="hero__accent">工业建造</span>游戏
+        {t("hero.title.line1")}<br />
+        {t("hero.title.pre")}<span class="hero__accent">{t("hero.title.accent")}</span>{t("hero.title.post")}
       </h1>
-      <p class="hero__sub">
-        每个 Agent 是一座厂房，token 是电力，产出通过管道与卡车运往下游。
-        搭建你的智能体流水线，解锁技能卡，用 RTS 的直觉调度 AI 生产力。
-      </p>
+      <p class="hero__sub">{t("hero.sub")}</p>
       <div class="hero__actions">
         <a href="#cta" class="btn">
-          开始建造
+          {t("hero.cta.primary")}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
         </a>
-        <a href="#control" class="btn btn--ghost">查看控制面板</a>
+        <a href="#control" class="btn btn--ghost">{t("hero.cta.secondary")}</a>
       </div>
       <div class="hero__meta">
-        <span><b class="readout">7</b> 类预制厂房</span>
+        <span><b class="readout">7</b> {t("hero.meta.plants")}</span>
         <span class="hero__dot" aria-hidden="true">·</span>
-        <span><b class="readout">24</b> 张技能卡</span>
+        <span><b class="readout">24</b> {t("hero.meta.cards")}</span>
         <span class="hero__dot" aria-hidden="true">·</span>
-        <span>可视化 <b class="readout">token</b> 流向</span>
+        <span>{t("hero.meta.flowPre")}<b class="readout">token</b>{t("hero.meta.flowPost")}</span>
       </div>
     </div>
 
     <div class="hero__map panel panel--riveted">
       <div class="panel__bar">
-        <span>工厂全景 · FACTORY FLOOR</span>
+        <span>{t("hero.map.bar")}</span>
         <span class="hero__map-status">
           <span class="led" data-c="data" aria-hidden="true"></span>
           <span class="readout">LIVE · 12 UNITS</span>
@@ -45,12 +45,12 @@ import FactoryMap from "./FactoryMap.astro";
         <FactoryMap />
       </div>
       <div class="hero__map-foot">
-        <span class="hero__legend"><i style="--c:var(--power)"></i>电力 / token</span>
-        <span class="hero__legend"><i style="--c:var(--data)"></i>数据总线</span>
-        <span class="hero__legend"><i style="--c:var(--plasma)"></i>规划指令</span>
-        <span class="hero__legend"><i style="--c:var(--warn)"></i>返工回路</span>
-        <span class="hero__legend"><i style="--c:var(--ok)"></i>成品出库</span>
-        <span class="hero__pan">左右拖动查看全厂</span>
+        <span class="hero__legend"><i style="--c:var(--power)"></i>{t("hero.legend.power")}</span>
+        <span class="hero__legend"><i style="--c:var(--data)"></i>{t("hero.legend.data")}</span>
+        <span class="hero__legend"><i style="--c:var(--plasma)"></i>{t("hero.legend.plasma")}</span>
+        <span class="hero__legend"><i style="--c:var(--warn)"></i>{t("hero.legend.warn")}</span>
+        <span class="hero__legend"><i style="--c:var(--ok)"></i>{t("hero.legend.ok")}</span>
+        <span class="hero__pan">{t("hero.pan")}</span>
       </div>
     </div>
   </div>

@@ -45,6 +45,11 @@ export const ui = {
     "map.role.shipyard": "build & ship",
     "map.role.depot": "artifact depot",
 
+    "map.aria":
+      "Agent World factory floor: every agent is a plant, and tokens are the power flowing down the pipes.",
+    "map.haulRoad": "HAUL ROAD · bulk freight",
+    "map.forgeTag": "FORGE · code forge",
+
     "control.stencil": "control panel",
     "control.title": "Factory operations overview",
     "control.sub":
@@ -323,6 +328,11 @@ export const ui = {
     "map.role.critic": "质检返工",
     "map.role.shipyard": "构建交付",
     "map.role.depot": "成品仓库",
+
+    "map.aria":
+      "Agent World 工厂调度视图：每个 Agent 是一座厂房，token 作为电力沿管道流动",
+    "map.haulRoad": "HAUL ROAD · 大件成品陆运",
+    "map.forgeTag": "FORGE · 代码锻造厂",
 
     "control.stencil": "控制面板",
     "control.title": "工厂调度总览",
