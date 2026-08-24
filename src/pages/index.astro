@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hud from "../components/Hud.astro";
+import Hero from "../components/Hero.astro";
+import ControlPanel from "../components/ControlPanel.astro";
+import Pipeline from "../components/Pipeline.astro";
+import Sandbox from "../components/Sandbox.astro";
+import SkillCards from "../components/SkillCards.astro";
+import Cta from "../components/Cta.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Agent World — 游戏化的多智能体编排工作台"
+  description="每个 Agent 是一座厂房，token 是电力，产出沿管道流转。用即时战略游戏的直觉搭建并调度你的 AI 生产线。"
+>
+  <Hud />
+  <main>
+    <Hero />
+    <div data-reveal><ControlPanel /></div>
+    <div data-reveal><Pipeline /></div>
+    <div data-reveal><Sandbox /></div>
+    <div data-reveal><SkillCards /></div>
+    <div data-reveal><Cta /></div>
+  </main>
+  <Footer />
+</Layout>
