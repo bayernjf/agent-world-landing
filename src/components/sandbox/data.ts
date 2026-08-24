@@ -4,7 +4,6 @@ export type Mode = "select" | "connect" | "delete";
 export interface Plant {
   id: string;
   name: string;
-  role: string;
   cx: number;
   cy: number;
   accent: Accent;
@@ -33,13 +32,13 @@ export const CRITIC_ID = "critic";
 /* Columns are spaced >= MIN_FORWARD_GAP apart so every downstream edge routes as a
    forward dogleg; only the CRITIC rework edge is a backward bypass. */
 export const INITIAL_PLANTS: Plant[] = [
-  { id: "intake", name: "INTAKE", role: "任务分流", cx: 100, cy: 320, accent: "data", tier: "T1", rate: 60 },
-  { id: "planner", name: "PLANNER", role: "拆解规划", cx: 310, cy: 165, accent: "plasma", tier: "T3", rate: 34 },
-  { id: "research", name: "RESEARCH", role: "资料勘探", cx: 310, cy: 475, accent: "data", tier: "T2", rate: 28 },
-  { id: "forge", name: "FORGE", role: "代码锻造", cx: 520, cy: 320, accent: "power", tier: "T4", rate: 41 },
-  { id: "critic", name: "CRITIC", role: "质检返工", cx: 730, cy: 165, accent: "ok", tier: "T3", rate: 52 },
-  { id: "shipyard", name: "SHIPYARD", role: "构建交付", cx: 940, cy: 430, accent: "power", tier: "T3", rate: 37 },
-  { id: "depot", name: "DEPOT", role: "成品仓库", cx: 1150, cy: 300, accent: "ok", tier: "T2", rate: 80 },
+  { id: "intake", name: "INTAKE", cx: 100, cy: 320, accent: "data", tier: "T1", rate: 60 },
+  { id: "planner", name: "PLANNER", cx: 310, cy: 165, accent: "plasma", tier: "T3", rate: 34 },
+  { id: "research", name: "RESEARCH", cx: 310, cy: 475, accent: "data", tier: "T2", rate: 28 },
+  { id: "forge", name: "FORGE", cx: 520, cy: 320, accent: "power", tier: "T4", rate: 41 },
+  { id: "critic", name: "CRITIC", cx: 730, cy: 165, accent: "ok", tier: "T3", rate: 52 },
+  { id: "shipyard", name: "SHIPYARD", cx: 940, cy: 430, accent: "power", tier: "T3", rate: 37 },
+  { id: "depot", name: "DEPOT", cx: 1150, cy: 300, accent: "ok", tier: "T2", rate: 80 },
 ];
 
 export const INITIAL_CONNECTIONS: Connection[] = [

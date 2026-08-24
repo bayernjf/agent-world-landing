@@ -1,6 +1,8 @@
 ---
 // Sandbox — static shell around the interactive React island
-import SandboxCanvas from "./sandbox/SandboxCanvas.tsx";
+import SandboxCanvas, {
+  type SandboxStrings,
+} from "./sandbox/SandboxCanvas.tsx";
 import "../styles/sandbox.css";
 
 const legend = [
@@ -9,6 +11,52 @@ const legend = [
   { c: "var(--power)", t: "构建 / 产出" },
   { c: "var(--warn)", t: "返工回路" },
 ];
+
+const strings: SandboxStrings = {
+  mode: {
+    select: "选择 / 拖拽",
+    connect: "连线",
+    delete: "拆除",
+  },
+  hint: {
+    select: "拖动厂房重新布局，单击查看厂房详情",
+    connect: "依次点击两座厂房，铺设一条管道",
+    delete: "点击厂房或管道，将其拆除",
+  },
+  roles: {
+    intake: "任务分流",
+    planner: "拆解规划",
+    research: "资料勘探",
+    forge: "代码锻造",
+    critic: "质检返工",
+    shipyard: "构建交付",
+    depot: "成品仓库",
+  },
+  reset: "重置",
+  tokens: "TOKEN 储备",
+  dispatch: "派发任务",
+  dispatching: "生产中…",
+  touchHint: "拖拽建线请在桌面端体验 · 此处可左右拖动查看、点选厂房并派发任务",
+  inspector: "厂房检视 · UNIT INSPECTOR",
+  load: "负载",
+  throughput: "吞吐",
+  inbound: "入线",
+  outbound: "出线",
+  status: {
+    idle: "产线就绪 · 等待投料",
+    blocked: "管道中断 · 工件滞留",
+    shipped: "工件出库 · SHIPPED",
+    rework: "质检未通过 · 返工回流",
+    noRoute: "产线断开 · NO ROUTE TO DEPOT",
+    inTransit: "工件已投料 · IN TRANSIT",
+    restored: "产线已复原 · 等待投料",
+    plantRemoved: "已拆除厂房 · {id}",
+    pipeRemoved: "已拆除一段管道",
+    pipeExists: "这条管道已经存在",
+    pipeAdded: "已铺设管道 · {from} → {to}",
+    connectFrom: "起点 {name} · 请点击目标厂房",
+  },
+};
 ---
 
 <section id="sandbox">
@@ -23,7 +71,7 @@ const legend = [
     <div class="sb-wrap">
       {/* client:idle, not client:visible — astro-island is display:contents, so its
           observed rect is 0×0 and the visibility observer never fires. */}
-      <SandboxCanvas client:idle />
+      <SandboxCanvas client:idle strings={strings} />
     </div>
 
     <ul class="sb-legend">
