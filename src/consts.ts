@@ -8,7 +8,10 @@ export const AUTHOR = "bayernjf";
 
 export const SOCIAL = {
   github: "https://github.com/bayernjf/agent-world",
+  email: "b4yernjf@gmail.com",
 } as const;
+
+export const BRAND_MARK = "/brand/agent-world-mark.svg";
 
 export const LOCALES = ["en", "zh"] as const;
 export const DEFAULT_LOCALE = "en";

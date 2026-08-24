@@ -6,6 +6,7 @@ import {
   SOCIAL,
   OG_IMAGE,
   OG_IMAGE_SIZE,
+  BRAND_MARK,
 } from "../consts";
 import {
   useTranslations,
@@ -18,13 +19,16 @@ import {
 interface Props {
   lang: Lang;
   url: URL;
+  /** Set by the legal pages; the landing pages fall back to the shared copy. */
+  title?: string;
+  description?: string;
 }
 
-const { lang, url } = Astro.props;
+const { lang, url, title: titleOverride, description: descriptionOverride } = Astro.props;
 const t = useTranslations(lang);
 
-const title = t("meta.title");
-const description = t("meta.description");
+const title = titleOverride ?? t("meta.title");
+const description = descriptionOverride ?? t("meta.description");
 const altLang = getOtherLang(lang);
 
 const abs = (path: string) => new URL(path, SITE_URL).href;
@@ -45,7 +49,7 @@ const schema = {
       "@id": `${SITE_URL}/#organization`,
       name: SITE_NAME,
       url: SITE_URL,
-      logo: abs("/favicon.svg"),
+      logo: abs(BRAND_MARK),
       sameAs: [SOCIAL.github],
     },
     {
