@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^5.0.0",
+    "@bay/landing-ui": "github:bayernjf/landing-ui#v1.5.0",
     "astro": "^7.2.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
