@@ -1,0 +1,96 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Hud from "../../components/Hud.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_NAME, SOCIAL } from "../../consts";
+
+const title = `服务条款 | ${SITE_NAME}`;
+const description = `${SITE_NAME} 服务条款：使用本站及其内容所适用的约定。`;
+---
+
+<Layout title={title} description={description}>
+  <Hud />
+  <main class="doc">
+    <div class="shell">
+      <article class="panel panel--riveted doc__panel">
+        <p class="stencil">服务条款</p>
+        <h1>服务条款</h1>
+        <p class="doc__stamp">最后更新：2026 年 8 月 25 日</p>
+
+        <div class="doc__body">
+          <section>
+            <h2>1. 接受条款</h2>
+            <p>
+              欢迎访问 {SITE_NAME}（以下称「本站」）。访问或使用本站即表示你同意受本条款约束。
+              如果你不同意，请勿使用本站。
+            </p>
+          </section>
+
+          <section>
+            <h2>2. 网站内容</h2>
+            <p>
+              本站内容以「现状」提供，用于产品介绍，并可能随产品演进而变化。我们力求准确，
+              但不对内容的完整性与时效性作出明示或默示的保证。
+            </p>
+          </section>
+
+          <section>
+            <h2>3. 产品可用性</h2>
+            <p>
+              本站描述的产品仍在开发中，处于内测阶段。功能描述、读数、界面与接入路径都可能变化，
+              本站的任何内容都不构成在特定时间交付特定功能的承诺，也不构成对内测席位的保证。
+            </p>
+          </section>
+
+          <section>
+            <h2>4. 示意数据</h2>
+            <p>
+              本站展示的 token 吞吐、负载、队列深度与质量指标均为用于演示界面的示意数据，
+              不是性能基准，也不代表任何真实工作负载的表现。
+            </p>
+          </section>
+
+          <section>
+            <h2>5. 知识产权</h2>
+            <p>
+              本站的文案、设计与品牌标识归项目团队所有，未经许可不得商用。
+              开源代码则以其仓库中声明的许可证为准。
+            </p>
+          </section>
+
+          <section>
+            <h2>6. 可接受使用</h2>
+            <p>
+              请勿以可能损害或干扰本站运行、或侵犯他人权利的方式使用本站，
+              包括恶意抓取、注入攻击或冒充本站。
+            </p>
+          </section>
+
+          <section>
+            <h2>7. 责任限制</h2>
+            <p>
+              在法律允许的最大范围内，本站不对因使用或无法使用其内容而产生的任何间接、附带或
+              后果性损害承担责任。
+            </p>
+          </section>
+
+          <section>
+            <h2>8. 变更</h2>
+            <p>本条款可能更新，变更将在本页发布。继续使用本站即表示接受更新后的条款。</p>
+          </section>
+
+          <section>
+            <h2>9. 联系</h2>
+            <p>
+              关于本条款的问题，可以在我们的 <a href={SOCIAL.github}>GitHub 仓库</a> 提 Issue，
+              或发邮件到 <a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a>。
+            </p>
+          </section>
+        </div>
+
+        <a class="btn btn--ghost doc__back" href="/zh/">返回基地</a>
+      </article>
+    </div>
+  </main>
+  <Footer />
+</Layout>

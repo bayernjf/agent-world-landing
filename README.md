@@ -49,14 +49,15 @@ npm run shot      # 只重截预览图（需要 dist 已存在）
 ## 目录结构
 
 ```
-public/            favicon、robots.txt、llms.txt / llms-en.txt
+public/            favicon、brand mark、robots.txt、llms.txt / llms-en.txt
 scripts/shot.mjs   构建后截取 og:image
 src/consts.ts      站点级常量（域名、社交、og 图路径）
 src/i18n/          ui.ts 文案字典 + index.ts 语言工具
 src/layouts/       Layout.astro（head、reveal 脚本、CRT 层）
 src/components/    SEO、Hud、Hero、FactoryMap、ControlPanel、Pipeline、
                    Sandbox（+ React island）、SkillCards、Cta、Footer
-src/pages/         index.astro（en）、zh/index.astro、404.astro
+src/pages/         index.astro（en）、zh/index.astro、404.astro、
+                   privacy / terms（两种语言各一份）
 src/styles/        global.css
 ```
 

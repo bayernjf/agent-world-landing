@@ -1,0 +1,107 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hud from "../components/Hud.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_NAME, SOCIAL } from "../consts";
+
+const title = `Terms of Service | ${SITE_NAME}`;
+const description = `Terms of Service of ${SITE_NAME}: the agreement covering use of this site and its content.`;
+---
+
+<Layout title={title} description={description}>
+  <Hud />
+  <main class="doc">
+    <div class="shell">
+      <article class="panel panel--riveted doc__panel">
+        <p class="stencil">terms of service</p>
+        <h1>Terms of Service</h1>
+        <p class="doc__stamp">Last updated: August 25, 2026</p>
+
+        <div class="doc__body">
+          <section>
+            <h2>1. Acceptance</h2>
+            <p>
+              Welcome to {SITE_NAME} (the "Site"). By accessing or using the Site you agree
+              to be bound by these terms. If you do not agree, please do not use the Site.
+            </p>
+          </section>
+
+          <section>
+            <h2>2. Site Content</h2>
+            <p>
+              Content on the Site is provided "as is" for product introduction purposes and
+              may change as the product evolves. We strive for accuracy but make no express
+              or implied warranties regarding completeness or timeliness.
+            </p>
+          </section>
+
+          <section>
+            <h2>3. Product Availability</h2>
+            <p>
+              The product described here is still under development and in closed beta.
+              Feature descriptions, readouts, interfaces and access paths on the Site are
+              subject to change, and nothing here constitutes a commitment to ship a
+              specific feature on a specific date, nor a guarantee of a beta seat.
+            </p>
+          </section>
+
+          <section>
+            <h2>4. Illustrative Figures</h2>
+            <p>
+              Token throughput, load, queue depth and quality figures shown on the Site are
+              illustrative sample data used to demonstrate the interface. They are not
+              benchmarks and do not represent the performance of any real workload.
+            </p>
+          </section>
+
+          <section>
+            <h2>5. Intellectual Property</h2>
+            <p>
+              The Site's copy, design, and branding belong to the project team and may not
+              be used commercially without permission. Open-source code is governed by the
+              license declared in its repository.
+            </p>
+          </section>
+
+          <section>
+            <h2>6. Acceptable Use</h2>
+            <p>
+              Do not use the Site in ways that could harm or disrupt its operation or
+              infringe on others' rights, including malicious scraping, injection attacks,
+              or impersonation of the Site.
+            </p>
+          </section>
+
+          <section>
+            <h2>7. Limitation of Liability</h2>
+            <p>
+              To the maximum extent permitted by law, the Site is not liable for any
+              indirect, incidental, or consequential damages arising from use of or inability
+              to use its content.
+            </p>
+          </section>
+
+          <section>
+            <h2>8. Changes</h2>
+            <p>
+              These terms may be updated; changes will be posted on this page. Continued use
+              of the Site constitutes acceptance of the updated terms.
+            </p>
+          </section>
+
+          <section>
+            <h2>9. Contact</h2>
+            <p>
+              Questions about these terms can be raised via Issues on our
+              <a href={SOCIAL.github}>GitHub repository</a>, or by email at
+              <a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a>.
+            </p>
+          </section>
+        </div>
+
+        <a class="btn btn--ghost doc__back" href="/">Back to base</a>
+      </article>
+    </div>
+  </main>
+  <Footer />
+</Layout>

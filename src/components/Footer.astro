@@ -2,11 +2,14 @@
 import BayjfLink from "@bay/landing-ui/components/BayjfLink.astro";
 import StarOnGithub from "@bay/landing-ui/components/StarOnGithub.astro";
 import Logo from "./Logo.astro";
-import { getLangFromUrl, useTranslations, getAltLangPath } from "../i18n";
+import { getLangFromUrl, useTranslations, getAltLangPath, localizePath } from "../i18n";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const altPath = getAltLangPath(Astro.url, lang);
+
+// the legal pages carry this footer too, so section links have to be absolute
+const home = localizePath("/", lang);
 
 const year = 2026;
 ---
@@ -21,11 +24,13 @@ const year = 2026;
       <p class="foot__tag">{t("foot.tag")}</p>
     </div>
     <nav class="foot__nav">
-      <a href="#control">{t("foot.nav.control")}</a>
-      <a href="#pipeline">{t("foot.nav.pipeline")}</a>
-      <a href="#sandbox">{t("foot.nav.sandbox")}</a>
-      <a href="#skills">{t("foot.nav.skills")}</a>
-      <a href="#cta">{t("foot.nav.cta")}</a>
+      <a href={`${home}#control`}>{t("foot.nav.control")}</a>
+      <a href={`${home}#pipeline`}>{t("foot.nav.pipeline")}</a>
+      <a href={`${home}#sandbox`}>{t("foot.nav.sandbox")}</a>
+      <a href={`${home}#skills`}>{t("foot.nav.skills")}</a>
+      <a href={`${home}#cta`}>{t("foot.nav.cta")}</a>
+      <a href={localizePath("/privacy", lang)}>{t("foot.nav.privacy")}</a>
+      <a href={localizePath("/terms", lang)}>{t("foot.nav.terms")}</a>
     </nav>
     <div class="foot__ext">
       <BayjfLink size={16} />

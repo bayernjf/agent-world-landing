@@ -290,6 +290,8 @@ export const ui = {
     "foot.nav.sandbox": "Sandbox",
     "foot.nav.skills": "Tech tree",
     "foot.nav.cta": "Beta access",
+    "foot.nav.privacy": "Privacy",
+    "foot.nav.terms": "Terms",
   },
 
   zh: {
@@ -549,6 +551,8 @@ export const ui = {
     "foot.nav.sandbox": "交互沙盘",
     "foot.nav.skills": "技能树",
     "foot.nav.cta": "内测申请",
+    "foot.nav.privacy": "隐私政策",
+    "foot.nav.terms": "服务条款",
   },
 } as const;
 

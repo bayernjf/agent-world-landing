@@ -1,0 +1,94 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Hud from "../../components/Hud.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_NAME, SOCIAL } from "../../consts";
+
+const title = `隐私政策 | ${SITE_NAME}`;
+const description = `${SITE_NAME} 隐私政策：我们如何对待与你的访问相关的信息。`;
+---
+
+<Layout title={title} description={description}>
+  <Hud />
+  <main class="doc">
+    <div class="shell">
+      <article class="panel panel--riveted doc__panel">
+        <p class="stencil">隐私政策</p>
+        <h1>隐私政策</h1>
+        <p class="doc__stamp">最后更新：2026 年 8 月 25 日</p>
+
+        <div class="doc__body">
+          <section>
+            <h2>1. 概述</h2>
+            <p>
+              {SITE_NAME}（以下称「本站」）是一个产品介绍网站。我们尊重并保护访问者的隐私。
+              本政策说明我们如何对待与你的访问相关的信息。使用本站即表示你同意本政策的条款。
+            </p>
+          </section>
+
+          <section>
+            <h2>2. 我们处理的信息</h2>
+            <ul>
+              <li>本站是静态站点，不提供账号注册；除内测申请表外，不收集可识别个人身份的信息。</li>
+              <li>
+                如果你提交内测申请表，我们会保存你填写的邮箱和团队规模，仅用于发放内测资格与相关通知。
+              </li>
+              <li>
+                托管平台（Cloudflare Pages）可能按其自身政策记录基础访问日志（IP、User-Agent 等），
+                这部分不在我们的控制范围内。
+              </li>
+              <li>
+                若将来启用统计分析，也只使用匿名化的访问统计（页面浏览量、来源等），不用于识别个人。
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>3. 可交互沙盒</h2>
+            <p>
+              本站的沙盒完全在你的浏览器里运行。你拖动的厂房、铺设的管道、触发的派单都不会发送到服务器，
+              也不会被存储或传输。
+            </p>
+          </section>
+
+          <section>
+            <h2>4. Cookie 与本地存储</h2>
+            <p>
+              本站可能使用浏览器 cookie 或 localStorage 记住语言等界面偏好。这些仅用于改善浏览体验，
+              不用于跨站追踪。你可以在浏览器设置中禁用或清除它们。
+            </p>
+          </section>
+
+          <section>
+            <h2>5. 第三方链接</h2>
+            <p>
+              本站包含指向 GitHub 等第三方网站的链接。它们的隐私做法不在本政策覆盖范围内，
+              请查阅其各自的政策。
+            </p>
+          </section>
+
+          <section>
+            <h2>6. 儿童</h2>
+            <p>本站不面向 14 岁以下儿童，我们也不会在知情的情况下收集他们的个人信息。</p>
+          </section>
+
+          <section>
+            <h2>7. 变更</h2>
+            <p>本政策可能随产品演进更新，变更将在本页发布并更新「最后更新」日期。</p>
+          </section>
+
+          <section>
+            <h2>8. 联系</h2>
+            <p>
+              关于本政策的问题，可以在我们的 <a href={SOCIAL.github}>GitHub 仓库</a> 提 Issue，
+              或发邮件到 <a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a>。
+            </p>
+          </section>
+        </div>
+
+        <a class="btn btn--ghost doc__back" href="/zh/">返回基地</a>
+      </article>
+    </div>
+  </main>
+  <Footer />
+</Layout>

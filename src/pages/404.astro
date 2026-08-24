@@ -1,9 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Hud from "../components/Hud.astro";
+import { SITE_NAME } from "../consts";
+
+const title = `404: Page Not Found | ${SITE_NAME}`;
 ---
 
-<Layout>
+<Layout title={title}>
   <Hud />
   <main class="lost">
     <div class="shell">

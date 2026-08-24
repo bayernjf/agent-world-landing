@@ -4,6 +4,13 @@ import SEO from "../components/SEO.astro";
 import { getLangFromUrl } from "../i18n";
 
 const lang = getLangFromUrl(Astro.url);
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
 ---
 
 <!doctype html>
@@ -11,7 +18,7 @@ const lang = getLangFromUrl(Astro.url);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <SEO lang={lang} url={Astro.url} />
+    <SEO lang={lang} url={Astro.url} title={title} description={description} />
     <meta name="theme-color" content="#06090b" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
