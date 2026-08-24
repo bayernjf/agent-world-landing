@@ -5,7 +5,14 @@ import Logo from "./Logo.astro";
 
 <header class="hud">
   <div class="hud__inner shell">
-    <!-- left cluster: resources -->
+    <!-- left: brand -->
+    <a class="hud__brand" href="#top" aria-label="Agent World 首页">
+      <Logo />
+      <span class="hud__logo">AGENT&thinsp;WORLD</span>
+      <span class="led" data-c="power" aria-hidden="true"></span>
+    </a>
+
+    <!-- center: resources -->
     <div class="hud__group">
       <div class="hud__res">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--power)" stroke-width="1.8"><path d="M12 2v10l4 3-4 7m-4-7 4 3"/><path d="M12 12 8 9l4-3 4 3z"/></svg>
@@ -22,13 +29,6 @@ import Logo from "./Logo.astro";
         <span class="readout" id="res-uptime">99.7%</span>
         <span class="hud__label">UPTIME</span>
       </div>
-    </div>
-
-    <!-- center: title -->
-    <div class="hud__brand">
-      <Logo />
-      <span class="hud__logo">AGENT&thinsp;WORLD</span>
-      <span class="led" data-c="power" aria-hidden="true"></span>
     </div>
 
     <!-- right: clock + status -->
@@ -97,7 +97,8 @@ import Logo from "./Logo.astro";
     display: flex;
     align-items: center;
     gap: 9px;
-    --logo-size: 20px;
+    flex: none;
+    --logo-size: 22px;
   }
   .hud__logo {
     font-family: var(--mono);
@@ -126,6 +127,8 @@ import Logo from "./Logo.astro";
     .hud__res .hud__label { display: none; }
     .hud__group--right .hud__stat:first-child { display: none; }
     .hud__logo { font-size: 12px; letter-spacing: 0.2em; }
-    .hud__brand { gap: 7px; --logo-size: 17px; }
+    .hud__brand { gap: 7px; --logo-size: 19px; }
+    /* the brand now owns the left slot, so the bar can only carry one readout */
+    .hud__res:not(:first-child) { display: none; }
   }
 </style>
