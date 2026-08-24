@@ -1,0 +1,106 @@
+---
+import {
+  SITE_URL,
+  SITE_NAME,
+  AUTHOR,
+  SOCIAL,
+  OG_IMAGE,
+  OG_IMAGE_SIZE,
+} from "../consts";
+import {
+  useTranslations,
+  getAltLangPath,
+  getOtherLang,
+  localizePath,
+  type Lang,
+} from "../i18n";
+
+interface Props {
+  lang: Lang;
+  url: URL;
+}
+
+const { lang, url } = Astro.props;
+const t = useTranslations(lang);
+
+const title = t("meta.title");
+const description = t("meta.description");
+const altLang = getOtherLang(lang);
+
+const abs = (path: string) => new URL(path, SITE_URL).href;
+
+const canonical = abs(url.pathname);
+const altUrl = abs(getAltLangPath(url, lang));
+const defaultUrl = abs(localizePath("/", "en"));
+const ogImage = abs(OG_IMAGE[lang]);
+
+const htmlLang = lang === "zh" ? "zh-CN" : "en-US";
+const hreflang = (l: Lang) => (l === "zh" ? "zh-CN" : "en");
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: abs("/favicon.svg"),
+      sameAs: [SOCIAL.github],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      description,
+      inLanguage: htmlLang,
+      publisher: { "@id": `${SITE_URL}/#organization` },
+    },
+    {
+      "@type": "SoftwareApplication",
+      name: SITE_NAME,
+      url: SITE_URL,
+      description,
+      applicationCategory: "DeveloperApplication",
+      operatingSystem: "Web",
+      inLanguage: htmlLang,
+      author: { "@type": "Person", name: AUTHOR },
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      featureList: [
+        "Visual factory map of every agent in the run",
+        "Token budget metered like a power grid",
+        "Pipeline stages from intake to shipyard",
+        "Drag-to-connect orchestration sandbox",
+        "Skill cards unlocked along a four-tier tech tree",
+        "Live throughput and load readouts per agent",
+      ],
+    },
+  ],
+};
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<link rel="alternate" hreflang={hreflang(lang)} href={canonical} />
+<link rel="alternate" hreflang={hreflang(altLang)} href={altUrl} />
+<link rel="alternate" hreflang="x-default" href={defaultUrl} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={lang === "zh" ? "zh_CN" : "en_US"} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content={String(OG_IMAGE_SIZE.width)} />
+<meta property="og:image:height" content={String(OG_IMAGE_SIZE.height)} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />
