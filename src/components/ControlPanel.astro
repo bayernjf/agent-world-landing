@@ -1,0 +1,261 @@
+---
+// ControlPanel — RTS‑style command dashboard with live gauges
+---
+
+<section id="control" class="shell">
+  <span class="stencil">控制面板</span>
+  <h2 class="h-sec">工厂调度总览</h2>
+  <p class="sub-sec">
+    实时监控所有 Agent 工厂的运行状态、token 负载和产出效率。
+  </p>
+
+  <div class="dash">
+    <!-- primary row: 3 large gauges -->
+    <div class="panel panel--riveted dash__primary">
+      <div class="panel__bar">
+        <span>资源总览</span>
+        <span class="led" data-c="power" />
+      </div>
+      <div class="dash__primary-inner">
+        <div class="dash__metric">
+          <span class="dash__metric-label">TOKEN 供应</span>
+          <div class="dash__value">
+            <span class="readout dash__num">24,192</span>
+            <span class="dash__unit">tokens</span>
+          </div>
+          <div class="gauge"><i style="width:74%"></i></div>
+          <div class="dash__sub">
+            <span>装机容量 32,000</span>
+            <span>负载 74%</span>
+          </div>
+        </div>
+        <div class="dash__metric">
+          <span class="dash__metric-label">Agent 活跃度</span>
+          <div class="dash__value">
+            <span class="readout dash__num">12</span>
+            <span class="dash__unit">/ 16 在线</span>
+          </div>
+          <div class="gauge"><i style="width:75%"></i></div>
+          <div class="dash__sub">
+            <span>6 空闲 · 4 工作中</span>
+            <span>2 待机</span>
+          </div>
+        </div>
+        <div class="dash__metric">
+          <span class="dash__metric-label">管道吞吐量</span>
+          <div class="dash__value">
+            <span class="readout dash__num">41</span>
+            <span class="dash__unit">arts / min</span>
+          </div>
+          <div class="gauge"><i style="width:62%"></i></div>
+          <div class="dash__sub">
+            <span>峰值为 66/min</span>
+            <span>工时利用率 62%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- secondary row: 4 smaller panels -->
+    <div class="dash__secondary">
+      <div class="panel panel--riveted dash__stat-panel">
+        <div class="panel__bar">
+          <span>任务队列</span>
+          <span class="led" data-c="data" />
+        </div>
+        <div class="dash__stat-inner">
+          <div class="readout dash__num-s">7</div>
+          <div class="dash__queue">
+            <span class="dash__q-item">排队中</span>
+            <span class="dash__q-item">处理中</span>
+            <span class="dash__q-item">待检视</span>
+          </div>
+          <div class="dash__q-bars">
+            <div class="dash__q-bar"><i style="width:60%"></i></div>
+            <div class="dash__q-bar"><i style="width:85%"></i></div>
+            <div class="dash__q-bar"><i style="width:40%"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel--riveted dash__stat-panel">
+        <div class="panel__bar">
+          <span>质量指数</span>
+          <span class="led" data-c="ok" />
+        </div>
+        <div class="dash__stat-inner">
+          <div class="readout dash__num-s" style="color:var(--ok)">96.3%</div>
+          <div class="dash__sub" style="margin-top:6px;text-align:center">
+            <span>通过率 96.3%</span>
+            <span>返工率 3.7%</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel--riveted dash__stat-panel">
+        <div class="panel__bar">
+          <span>电力消耗</span>
+          <span class="led" data-c="power" />
+        </div>
+        <div class="dash__stat-inner">
+          <div class="readout dash__num-s" style="color:var(--power)">23.7k</div>
+          <div class="dash__sub" style="margin-top:6px;text-align:center">
+            <span>当前 23.7k tok/min</span>
+            <span>预算 32k tok/min</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel--riveted dash__stat-panel">
+        <div class="panel__bar">
+          <span>系统状态</span>
+          <span class="led" data-c="data" />
+        </div>
+        <div class="dash__stat-inner">
+          <div class="dash__status-list">
+            <div class="dash__status-row">
+              <span class="led" data-c="ok" />
+              <span>编排器</span>
+            </div>
+            <div class="dash__status-row">
+              <span class="led" data-c="ok" />
+              <span>管道</span>
+            </div>
+            <div class="dash__status-row">
+              <span class="led" data-c="ok" />
+              <span>存储</span>
+            </div>
+            <div class="dash__status-row">
+              <span class="led" data-c="ok" />
+              <span>API</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .dash {
+    margin-top: 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .dash__primary {
+    overflow: hidden;
+  }
+  .dash__primary-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 24px 28px;
+  }
+  .dash__metric {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .dash__metric-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .dash__value {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .dash__num {
+    font-size: 32px;
+    color: var(--ink);
+  }
+  .dash__num-s {
+    font-size: 28px;
+    color: var(--data);
+  }
+  .dash__unit {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+  .dash__sub {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--ink-faint);
+  }
+
+  .dash__secondary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .dash__stat-panel {
+    overflow: hidden;
+  }
+  .dash__stat-inner {
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .dash__queue {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--ink-faint);
+  }
+  .dash__q-bars {
+    margin-top: 8px;
+    width: 100%;
+    display: flex;
+    gap: 12px;
+  }
+  .dash__q-bar {
+    flex: 1;
+    height: 5px;
+    background: var(--steel-900);
+    border: 1px solid var(--steel-600);
+    overflow: hidden;
+  }
+  .dash__q-bar i {
+    display: block;
+    height: 100%;
+    background: var(--data);
+  }
+
+  .dash__status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+  .dash__status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-dim);
+  }
+
+  @media (max-width: 800px) {
+    .dash__primary-inner {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 18px;
+    }
+    .dash__secondary {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 500px) {
+    .dash__secondary {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
