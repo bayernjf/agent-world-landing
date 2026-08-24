@@ -1,0 +1,397 @@
+---
+/**
+ * FactoryMap — the hero centerpiece.
+ * An RTS-style factory floor: each Agent is a plant, tokens are power,
+ * pipes carry the flow. Pure SVG + SMIL so it stays crisp and cheap.
+ */
+
+const W = 1240;
+const H = 640;
+
+type Accent = "power" | "data" | "plasma" | "ok";
+
+const agents: {
+  id: string;
+  name: string;
+  role: string;
+  cx: number;
+  cy: number;
+  accent: Accent;
+  load: number;
+  tier: string;
+}[] = [
+  { id: "intake", name: "INTAKE", role: "任务分流", cx: 110, cy: 320, accent: "data", load: 64, tier: "T1" },
+  { id: "planner", name: "PLANNER", role: "拆解规划", cx: 400, cy: 150, accent: "plasma", load: 82, tier: "T3" },
+  { id: "research", name: "RESEARCH", role: "资料勘探", cx: 400, cy: 490, accent: "data", load: 47, tier: "T2" },
+  { id: "forge", name: "FORGE", role: "代码锻造", cx: 660, cy: 320, accent: "power", load: 93, tier: "T4" },
+  { id: "critic", name: "CRITIC", role: "质检返工", cx: 930, cy: 150, accent: "ok", load: 58, tier: "T3" },
+  { id: "shipyard", name: "SHIPYARD", role: "构建交付", cx: 930, cy: 490, accent: "power", load: 71, tier: "T3" },
+  { id: "depot", name: "DEPOT", role: "成品仓库", cx: 1150, cy: 320, accent: "ok", load: 35, tier: "T2" },
+];
+
+const BW = 140;
+const BH = 86;
+
+const pipes: { id: string; d: string; kind: Accent; dur: number; dots: number }[] = [
+  { id: "pi", d: `M0,320 H40`, kind: "data", dur: 1.6, dots: 2 },
+  { id: "p1", d: `M180,320 H270 Q290,320 290,300 V170 Q290,150 310,150 H330`, kind: "data", dur: 3.2, dots: 4 },
+  { id: "p2", d: `M180,320 H270 Q290,320 290,340 V470 Q290,490 310,490 H330`, kind: "data", dur: 3.4, dots: 3 },
+  { id: "p3", d: `M470,150 H550 Q570,150 570,170 V300 Q570,320 590,320`, kind: "plasma", dur: 2.8, dots: 4 },
+  { id: "p4", d: `M470,490 H550 Q570,490 570,470 V340 Q570,320 590,320`, kind: "data", dur: 3.0, dots: 3 },
+  { id: "p5", d: `M730,320 H820 Q840,320 840,300 V170 Q840,150 860,150`, kind: "power", dur: 2.6, dots: 4 },
+  { id: "p6", d: `M730,320 H820 Q840,320 840,340 V470 Q840,490 860,490`, kind: "power", dur: 2.9, dots: 4 },
+  { id: "p7", d: `M1000,150 H1040 Q1060,150 1060,170 V300 Q1060,320 1080,320`, kind: "ok", dur: 2.2, dots: 3 },
+  { id: "p8", d: `M1000,490 H1040 Q1060,490 1060,470 V340 Q1060,320 1080,320`, kind: "power", dur: 2.4, dots: 3 },
+  { id: "po", d: `M1220,320 H1240`, kind: "ok", dur: 1.4, dots: 2 },
+];
+
+// critic → forge rework loop, drawn above the floor
+const reworkPath = `M930,107 V56 Q930,36 910,36 H680 Q660,36 660,56 V277`;
+
+// ground haul road, kept clear of the plant footprints (which end at y=533)
+const truckRoute = `M300,588 H1150`;
+
+const colorOf: Record<Accent, string> = {
+  power: "var(--power)",
+  data: "var(--data)",
+  plasma: "var(--plasma)",
+  ok: "var(--ok)",
+};
+---
+
+<div class="map">
+  <svg
+    viewBox={`0 0 ${W} ${H}`}
+    role="img"
+    aria-label="Agent World 工厂调度视图：每个 Agent 是一座厂房，token 作为电力沿管道流动"
+  >
+    <defs>
+      <!-- steel body -->
+      <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#2b3841" />
+        <stop offset="45%" stop-color="#1b242b" />
+        <stop offset="100%" stop-color="#121a1f" />
+      </linearGradient>
+      <linearGradient id="metalHi" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="rgba(255,255,255,.10)" />
+        <stop offset="30%" stop-color="rgba(255,255,255,0)" />
+      </linearGradient>
+
+      <!-- floor grid -->
+      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M40 0 H0 V40" fill="none" stroke="rgba(120,160,180,.08)" stroke-width="1" />
+      </pattern>
+      <pattern id="gridLg" width="200" height="200" patternUnits="userSpaceOnUse">
+        <path d="M200 0 H0 V200" fill="none" stroke="rgba(120,160,180,.13)" stroke-width="1" />
+      </pattern>
+
+      <radialGradient id="floorFade" cx="50%" cy="50%" r="62%">
+        <stop offset="0%" stop-color="#fff" stop-opacity="1" />
+        <stop offset="100%" stop-color="#fff" stop-opacity="0" />
+      </radialGradient>
+      <mask id="fadeMask">
+        <rect width={W} height={H} fill="url(#floorFade)" />
+      </mask>
+
+      <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="3.2" result="b" />
+        <feMerge>
+          <feMergeNode in="b" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="7" />
+      </filter>
+    </defs>
+
+    <!-- ============ floor ============ -->
+    <g mask="url(#fadeMask)">
+      <rect width={W} height={H} fill="url(#grid)" />
+      <rect width={W} height={H} fill="url(#gridLg)" />
+    </g>
+
+    <!-- ============ ground logistics: haul road ============ -->
+    <g class="lane">
+      <!-- spurs dropping from the plants down onto the road -->
+      <path d="M400,533 V588 M930,533 V588 M1150,533 V588" fill="none" stroke="rgba(120,160,180,.10)" stroke-width="9" stroke-linecap="round" />
+      <path id="truckRoute" d={truckRoute} fill="none" stroke="rgba(120,160,180,.14)" stroke-width="16" stroke-linecap="round" />
+      <path d={truckRoute} fill="none" stroke="rgba(255,176,32,.22)" stroke-width="1.5" stroke-dasharray="14 12" />
+      <text x="300" y="612" class="t-meta">HAUL ROAD · 大件成品陆运</text>
+      {[0, 1].map((i) => (
+        <g class="truck">
+          <rect x="-13" y="-6" width="20" height="12" rx="1.5" fill="#2c3a44" stroke="var(--power)" stroke-opacity=".55" />
+          <rect x="7" y="-5" width="8" height="10" rx="1.5" fill="#38505d" stroke="var(--power)" stroke-opacity=".45" />
+          <rect x="-9" y="-4" width="12" height="4" rx="1" fill="var(--power)" fill-opacity=".55" />
+          <animateMotion dur="13s" begin={`${i * 6.5}s`} repeatCount="indefinite" rotate="auto">
+            <mpath href="#truckRoute" />
+          </animateMotion>
+        </g>
+      ))}
+    </g>
+
+    <!-- ============ pipes ============ -->
+    <g class="pipes">
+      {pipes.map((p) => (
+        <>
+          {/* casing */}
+          <path d={p.d} fill="none" stroke="#0c1216" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" />
+          <path
+            id={p.id}
+            d={p.d}
+            fill="none"
+            stroke={colorOf[p.kind]}
+            stroke-opacity=".28"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          {/* travelling current highlight */}
+          <path
+            d={p.d}
+            fill="none"
+            stroke={colorOf[p.kind]}
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-dasharray="26 190"
+            filter="url(#glow)"
+            class="pipe-current"
+            style={`--dur:${p.dur * 1.7}s`}
+          />
+        </>
+      ))}
+
+      <!-- flowing charge packets -->
+      {pipes.map((p) =>
+        Array.from({ length: p.dots }).map((_, i) => (
+          <circle r="3.1" fill={colorOf[p.kind]} filter="url(#glow)">
+            <animateMotion
+              dur={`${p.dur}s`}
+              begin={`${(i * p.dur) / p.dots}s`}
+              repeatCount="indefinite"
+              keyPoints="0;1"
+              keyTimes="0;1"
+              calcMode="linear"
+            >
+              <mpath href={`#${p.id}`} />
+            </animateMotion>
+          </circle>
+        ))
+      )}
+    </g>
+
+    <!-- ============ rework loop (critic sends work back) ============ -->
+    <g class="rework">
+      <path id="reworkPath" d={reworkPath} fill="none" stroke="var(--warn)" stroke-opacity=".3" stroke-width="1.6" stroke-dasharray="6 7" />
+      <circle r="2.6" fill="var(--warn)" filter="url(#glow)">
+        <animateMotion dur="4.2s" repeatCount="indefinite">
+          <mpath href="#reworkPath" />
+        </animateMotion>
+      </circle>
+      <text x="795" y="28" class="t-tag" fill="var(--warn)" fill-opacity=".8">REWORK LOOP</text>
+    </g>
+
+    <!-- ============ agent plants ============ -->
+    {agents.map((a) => {
+      const x = a.cx - BW / 2;
+      const y = a.cy - BH / 2;
+      const c = colorOf[a.accent];
+      return (
+        <g class="plant" data-id={a.id}>
+          {/* ground glow */}
+          <ellipse cx={a.cx} cy={y + BH + 8} rx={BW / 1.7} ry="10" fill={c} fill-opacity=".13" filter="url(#softGlow)" />
+
+          {/* chimney + vent stacks */}
+          <rect x={x + 16} y={y - 13} width="13" height="14" fill="#202b32" stroke="#33434d" />
+          <rect x={x + 34} y={y - 8} width="9" height="9" fill="#1a232a" stroke="#33434d" />
+          {/* smoke */}
+          {[0, 1, 2].map((i) => (
+            <circle cx={x + 22.5} cy={y - 16} r="4" fill={c} fill-opacity=".22" class="smoke" style={`--d:${i * 1.1}s`} />
+          ))}
+
+          {/* body */}
+          <rect x={x} y={y} width={BW} height={BH} rx="3" fill="url(#metal)" stroke="#3a4a55" />
+          <rect x={x} y={y} width={BW} height={BH} rx="3" fill="url(#metalHi)" />
+          {/* accent roof band */}
+          <rect x={x} y={y} width={BW} height="4" fill={c} filter="url(#glow)" />
+          {/* corner rivets */}
+          {[
+            [x + 6, y + 12],
+            [x + BW - 6, y + 12],
+            [x + 6, y + BH - 6],
+            [x + BW - 6, y + BH - 6],
+          ].map(([rx, ry]) => (
+            <circle cx={rx} cy={ry} r="1.7" fill="#5e7180" />
+          ))}
+
+          {/* tier chip + status led */}
+          <rect x={x + 10} y={y + 12} width="26" height="13" rx="1" fill="#0c1317" stroke={c} stroke-opacity=".5" />
+          <text x={x + 23} y={y + 22} class="t-tier" fill={c} text-anchor="middle">{a.tier}</text>
+          <circle cx={x + BW - 14} cy={y + 18} r="3.2" fill={c} filter="url(#glow)" class="plant-led" />
+
+          {/* name + role */}
+          <text x={x + 42} y={y + 23} class="t-name">{a.name}</text>
+          <text x={x + 10} y={y + 44} class="t-role">{a.role}</text>
+
+          {/* load gauge */}
+          <rect x={x + 10} y={y + 56} width={BW - 20} height="6" fill="#0a1014" stroke="#2c3a44" />
+          <rect x={x + 11} y={y + 57} width={((BW - 22) * a.load) / 100} height="4" fill={c} fill-opacity=".85">
+            <animate
+              attributeName="opacity"
+              values="1;.62;1"
+              dur="2.4s"
+              repeatCount="indefinite"
+            />
+          </rect>
+          <text x={x + 10} y={y + 77} class="t-meta">LOAD</text>
+          <text x={x + BW - 10} y={y + 77} class="t-meta" text-anchor="end">{a.load}%</text>
+        </g>
+      );
+    })}
+
+    <!-- ============ selected-unit brackets on FORGE ============ -->
+    <g class="sel" filter="url(#glow)">
+      {(() => {
+        const a = agents.find((n) => n.id === "forge")!;
+        const x = a.cx - BW / 2 - 9;
+        const y = a.cy - BH / 2 - 9;
+        const w = BW + 18;
+        const h = BH + 18;
+        const L = 16;
+        return (
+          <>
+            <path d={`M${x},${y + L} V${y} H${x + L}`} fill="none" stroke="var(--power)" stroke-width="2" />
+            <path d={`M${x + w - L},${y} H${x + w} V${y + L}`} fill="none" stroke="var(--power)" stroke-width="2" />
+            <path d={`M${x + w},${y + h - L} V${y + h} H${x + w - L}`} fill="none" stroke="var(--power)" stroke-width="2" />
+            <path d={`M${x + L},${y + h} H${x} V${y + h - L}`} fill="none" stroke="var(--power)" stroke-width="2" />
+          </>
+        );
+      })()}
+    </g>
+
+    <!-- ============ inspector callout for the selected plant ============ -->
+    <g class="callout">
+      <path d="M745,268 L790,238" stroke="var(--power)" stroke-opacity=".5" stroke-width="1" />
+      <rect x="788" y="196" width="176" height="46" fill="#0b1115" fill-opacity=".95" stroke="var(--power)" stroke-opacity=".45" />
+      <text x="798" y="212" class="t-meta" fill="var(--power)">FORGE · 代码锻造厂</text>
+      <text x="798" y="226" class="t-meta">THROUGHPUT 41 art/h</text>
+      <text x="798" y="237" class="t-meta">POWER DRAW 3.2k tok/min</text>
+    </g>
+
+    <!-- edge port labels -->
+    <text x="8" y="306" class="t-meta" fill="var(--data)">INPUT</text>
+    <text x={W - 8} y="306" class="t-meta" fill="var(--ok)" text-anchor="end">SHIPPED</text>
+  </svg>
+</div>
+
+<style>
+  .map {
+    position: relative;
+  }
+  .map svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Below ~1000px the floor plan would scale past legibility (the SVG labels
+     are sized for a ~1240-unit viewBox), so pin it to a readable width and
+     let the user pan horizontally instead. */
+  @media (max-width: 1000px) {
+    .map {
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+    }
+    .map svg {
+      width: 1100px;
+      max-width: none; /* global `svg { max-width: 100% }` would undo the pan width */
+      overflow: hidden;
+    }
+    .map::-webkit-scrollbar {
+      height: 4px;
+    }
+    .map::-webkit-scrollbar-thumb {
+      background: var(--steel-500);
+    }
+  }
+
+  /* SVG typography */
+  :global(.map .t-name) {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    fill: var(--ink);
+  }
+  :global(.map .t-role) {
+    font-family: var(--sans);
+    font-size: 11.5px;
+    fill: var(--ink-dim);
+  }
+  :global(.map .t-meta) {
+    font-family: var(--mono);
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+    fill: var(--ink-faint);
+  }
+  :global(.map .t-tier) {
+    font-family: var(--mono);
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  :global(.map .t-tag) {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+  }
+
+  /* current sweeping along each pipe */
+  :global(.pipe-current) {
+    stroke-dashoffset: 216;
+    animation: sweep var(--dur, 3s) linear infinite;
+  }
+  @keyframes sweep {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  :global(.map .smoke) {
+    animation: puff 3.3s ease-out infinite;
+    animation-delay: var(--d, 0s);
+    opacity: 0;
+  }
+  @keyframes puff {
+    0% { transform: translateY(0) scale(0.5); opacity: 0.5; }
+    100% { transform: translateY(-42px) scale(2.1); opacity: 0; }
+  }
+
+  :global(.map .plant-led) {
+    animation: pulse 1.9s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  :global(.map .sel) {
+    animation: selBreathe 2.6s ease-in-out infinite;
+  }
+  @keyframes selBreathe {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+
+  :global(.map .plant) {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-box: fill-box;
+    transform-origin: center;
+    cursor: crosshair;
+  }
+  :global(.map .plant:hover) {
+    transform: translateY(-4px);
+  }
+</style>

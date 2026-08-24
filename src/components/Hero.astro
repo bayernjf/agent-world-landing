@@ -1,0 +1,178 @@
+---
+import FactoryMap from "./FactoryMap.astro";
+---
+
+<section class="hero">
+  <div class="shell">
+    <div class="hero__head">
+      <div class="hero__badge">
+        <span class="led" data-c="power" aria-hidden="true"></span>
+        <span>ALPHA · 内测招募中</span>
+      </div>
+      <h1 class="hero__title">
+        把多智能体编排<br />
+        变成一场<span class="hero__accent">工业建造</span>游戏
+      </h1>
+      <p class="hero__sub">
+        每个 Agent 是一座厂房，token 是电力，产出通过管道与卡车运往下游。
+        搭建你的智能体流水线，解锁技能卡，用 RTS 的直觉调度 AI 生产力。
+      </p>
+      <div class="hero__actions">
+        <a href="#cta" class="btn">
+          开始建造
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </a>
+        <a href="#control" class="btn btn--ghost">查看控制面板</a>
+      </div>
+      <div class="hero__meta">
+        <span><b class="readout">7</b> 类预制厂房</span>
+        <span class="hero__dot" aria-hidden="true">·</span>
+        <span><b class="readout">24</b> 张技能卡</span>
+        <span class="hero__dot" aria-hidden="true">·</span>
+        <span>可视化 <b class="readout">token</b> 流向</span>
+      </div>
+    </div>
+
+    <div class="hero__map panel panel--riveted">
+      <div class="panel__bar">
+        <span>工厂全景 · FACTORY FLOOR</span>
+        <span class="hero__map-status">
+          <span class="led" data-c="data" aria-hidden="true"></span>
+          <span class="readout">LIVE · 12 UNITS</span>
+        </span>
+      </div>
+      <div class="hero__map-body">
+        <FactoryMap />
+      </div>
+      <div class="hero__map-foot">
+        <span class="hero__legend"><i style="--c:var(--power)"></i>电力 / token</span>
+        <span class="hero__legend"><i style="--c:var(--data)"></i>数据总线</span>
+        <span class="hero__legend"><i style="--c:var(--plasma)"></i>规划指令</span>
+        <span class="hero__legend"><i style="--c:var(--warn)"></i>返工回路</span>
+        <span class="hero__legend"><i style="--c:var(--ok)"></i>成品出库</span>
+        <span class="hero__pan">左右拖动查看全厂</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: 72px 0 88px;
+  }
+  .hero__head {
+    max-width: 780px;
+  }
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--power);
+    background: rgba(255, 176, 32, 0.07);
+    border: 1px solid rgba(255, 176, 32, 0.28);
+  }
+  .hero__title {
+    margin-top: 22px;
+    font-size: clamp(34px, 6vw, 62px);
+    letter-spacing: -0.02em;
+  }
+  .hero__accent {
+    background: linear-gradient(100deg, var(--power), var(--data));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero__sub {
+    margin-top: 20px;
+    max-width: 58ch;
+    font-size: 16px;
+    color: var(--ink-dim);
+  }
+  .hero__actions {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .hero__meta {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
+  .hero__meta b {
+    color: var(--ink);
+  }
+  .hero__dot {
+    color: var(--steel-500);
+  }
+
+  .hero__map {
+    margin-top: 56px;
+  }
+  .hero__map-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .hero__map-body {
+    padding: 26px 20px 8px;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(53, 224, 240, 0.045), transparent 70%),
+      var(--steel-900);
+    overflow: hidden;
+  }
+  .hero__map-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 11px 16px;
+    border-top: var(--hair);
+    background: var(--steel-850);
+  }
+  .hero__legend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+  }
+  .hero__legend i {
+    width: 16px;
+    height: 2px;
+    background: var(--c);
+    box-shadow: 0 0 6px var(--c);
+  }
+
+  .hero__pan {
+    display: none;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--power);
+  }
+
+  @media (max-width: 1000px) {
+    .hero__pan {
+      display: inline;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero { padding: 44px 0 60px; }
+    .hero__map { margin-top: 36px; }
+    .hero__map-body { padding: 14px 8px 4px; }
+    .hero__map-foot { gap: 10px; }
+  }
+</style>

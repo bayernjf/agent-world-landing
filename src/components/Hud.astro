@@ -1,0 +1,127 @@
+---
+// RTS‑style HUD bar: resources, time, minimap hint
+---
+
+<header class="hud">
+  <div class="hud__inner shell">
+    <!-- left cluster: resources -->
+    <div class="hud__group">
+      <div class="hud__res">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--power)" stroke-width="1.8"><path d="M12 2v10l4 3-4 7m-4-7 4 3"/><path d="M12 12 8 9l4-3 4 3z"/></svg>
+        <span class="readout" id="res-tokens">24,192</span>
+        <span class="hud__label">TOKENS</span>
+      </div>
+      <div class="hud__res">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--data)" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span class="readout" id="res-agents">12</span>
+        <span class="hud__label">AGENTS</span>
+      </div>
+      <div class="hud__res">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="1.8"><path d="M22 12A10 10 0 1 1 12 2v10l5 3"/></svg>
+        <span class="readout" id="res-uptime">99.7%</span>
+        <span class="hud__label">UPTIME</span>
+      </div>
+    </div>
+
+    <!-- center: title -->
+    <div class="hud__brand">
+      <span class="hud__logo">AGENT&thinsp;WORLD</span>
+      <span class="led" data-c="power" aria-hidden="true"></span>
+    </div>
+
+    <!-- right: clock + status -->
+    <div class="hud__group hud__group--right">
+      <div class="hud__stat">
+        <span class="led" data-c="data" aria-hidden="true"></span>
+        <span class="readout">SYSTEM NOMINAL</span>
+      </div>
+      <div class="hud__stat">
+        <span class="readout" id="res-clock">14:28:07</span>
+      </div>
+    </div>
+  </div>
+  <!-- bottom border glow -->
+  <div class="hud__glow" aria-hidden="true"></div>
+</header>
+
+<style>
+  .hud {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: linear-gradient(180deg, var(--steel-900) 0%, var(--steel-850) 100%);
+    border-bottom: 1px solid var(--steel-600);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+  }
+  .hud__glow {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 10%, var(--power) 40%, var(--data) 60%, transparent 90%);
+    opacity: 0.18;
+  }
+  .hud__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+    gap: 16px;
+  }
+  .hud__group {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  .hud__group--right {
+    gap: 20px;
+  }
+  .hud__res {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+  }
+  .hud__res .readout {
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .hud__label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    color: var(--ink-faint);
+    align-self: flex-end;
+    margin-bottom: 1px;
+  }
+  .hud__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hud__logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.28em;
+    background: linear-gradient(90deg, var(--power), var(--data));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hud__stat {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-dim);
+  }
+  .hud__stat .readout {
+    font-size: 11px;
+  }
+
+  @media (max-width: 720px) {
+    .hud__inner { height: 44px; }
+    .hud__res .hud__label { display: none; }
+    .hud__group--right .hud__stat:first-child { display: none; }
+    .hud__logo { font-size: 12px; letter-spacing: 0.2em; }
+  }
+</style>
