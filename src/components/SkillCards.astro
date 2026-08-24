@@ -1,0 +1,692 @@
+---
+// SkillCards — Age of Empires style tech tree: 6 branches x 4 tiers = 24 skill cards.
+// Same-branch prerequisites are drawn as connector lines; cross-branch ones render as tags.
+interface Skill {
+  name: string;
+  desc: string;
+  icon: string;
+  cost: string;
+  prereq: string[];
+  effect: string;
+  active: boolean;
+}
+
+interface Branch {
+  key: string;
+  label: string;
+  code: string;
+  accent: string;
+  blurb: string;
+  /** exactly four, one per tier T1..T4 */
+  skills: Skill[];
+}
+
+const branches: Branch[] = [
+  {
+    key: "orchestration",
+    label: "调度",
+    code: "ORCHESTRATION",
+    accent: "var(--plasma)",
+    blurb: "决定谁在什么时候干什么",
+    skills: [
+      {
+        name: "任务解构",
+        desc: "把复杂指令自动拆成带依赖的子任务。",
+        icon: "M",
+        cost: "1,200",
+        prereq: [],
+        effect: "拆解效率 +40%",
+        active: true,
+      },
+      {
+        name: "并行锻造",
+        desc: "无依赖工序同时开工，不再排队等待。",
+        icon: "II",
+        cost: "4,800",
+        prereq: ["任务解构"],
+        effect: "并行度 +3",
+        active: true,
+      },
+      {
+        name: "动态排产",
+        desc: "按实时负载与预算重排工序优先级。",
+        icon: "⇄",
+        cost: "14,000",
+        prereq: ["并行锻造", "管道优化"],
+        effect: "空转时间 −55%",
+        active: true,
+      },
+      {
+        name: "自适应路由",
+        desc: "任务自动落到当前最合适的那座厂房。",
+        icon: "◎",
+        cost: "42,000",
+        prereq: ["动态排产", "跨厂共识"],
+        effect: "满载作业率 99.7%",
+        active: false,
+      },
+    ],
+  },
+  {
+    key: "fabrication",
+    label: "生产",
+    code: "FABRICATION",
+    accent: "var(--power)",
+    blurb: "把计划变成真正的产物",
+    skills: [
+      {
+        name: "模板铸造",
+        desc: "高频产物走预制模板，跳过从零生成。",
+        icon: "□",
+        cost: "900",
+        prereq: [],
+        effect: "首件耗时 −30%",
+        active: true,
+      },
+      {
+        name: "增量锻造",
+        desc: "只重建被改动的部分，其余直接复用。",
+        icon: "⊞",
+        cost: "5,200",
+        prereq: ["模板铸造"],
+        effect: "重建成本 −64%",
+        active: true,
+      },
+      {
+        name: "多模工厂",
+        desc: "同一座厂房按工序难度切换推理模型。",
+        icon: "△",
+        cost: "18,000",
+        prereq: ["增量锻造", "记忆蒸馏"],
+        effect: "弹性推理成本",
+        active: false,
+      },
+      {
+        name: "熔炉超频",
+        desc: "为高优任务临时超配算力，代价是电费。",
+        icon: "◆",
+        cost: "56,000",
+        prereq: ["多模工厂", "蓄能电池"],
+        effect: "峰值吞吐 ×2.4",
+        active: false,
+      },
+    ],
+  },
+  {
+    key: "quality",
+    label: "质检",
+    code: "QUALITY",
+    accent: "var(--ok)",
+    blurb: "不合格的东西别想出厂",
+    skills: [
+      {
+        name: "代码质检",
+        desc: "自动检视产出并标记潜在风险点。",
+        icon: "Q",
+        cost: "3,200",
+        prereq: [],
+        effect: "质检覆盖率 92%",
+        active: true,
+      },
+      {
+        name: "回归靶场",
+        desc: "每批产出都跑一遍历史用例再放行。",
+        icon: "⊙",
+        cost: "6,400",
+        prereq: ["代码质检"],
+        effect: "回归逃逸 −78%",
+        active: true,
+      },
+      {
+        name: "返工闭环",
+        desc: "不合格件自动回流上游重造，无需人工。",
+        icon: "↻",
+        cost: "16,000",
+        prereq: ["回归靶场"],
+        effect: "一次通过率 88%",
+        active: true,
+      },
+      {
+        name: "形式校验",
+        desc: "对关键路径做形式化证明而非抽样测试。",
+        icon: "⊗",
+        cost: "72,000",
+        prereq: ["返工闭环", "知识矿脉"],
+        effect: "严重缺陷趋零",
+        active: false,
+      },
+    ],
+  },
+  {
+    key: "intel",
+    label: "情报",
+    code: "INTELLIGENCE",
+    accent: "var(--data)",
+    blurb: "让厂房知道自己在干什么",
+    skills: [
+      {
+        name: "资料勘探",
+        desc: "按需抓取外部资料并归档进厂内料场。",
+        icon: "○",
+        cost: "1,600",
+        prereq: [],
+        effect: "检索命中率 +45%",
+        active: true,
+      },
+      {
+        name: "记忆蒸馏",
+        desc: "从历史作业里提炼可复用的结论与教训。",
+        icon: "◈",
+        cost: "7,800",
+        prereq: ["资料勘探"],
+        effect: "上下文压缩比 7:1",
+        active: true,
+      },
+      {
+        name: "知识矿脉",
+        desc: "私有库建成常驻索引，开工即可查阅。",
+        icon: "≡",
+        cost: "21,000",
+        prereq: ["记忆蒸馏"],
+        effect: "冷启动 −80%",
+        active: false,
+      },
+      {
+        name: "跨厂共识",
+        desc: "多座厂房交叉验证同一事实后才采信。",
+        icon: "✦",
+        cost: "64,000",
+        prereq: ["知识矿脉", "回归靶场"],
+        effect: "事实错误率 0.3%",
+        active: false,
+      },
+    ],
+  },
+  {
+    key: "infra",
+    label: "基建",
+    code: "INFRASTRUCTURE",
+    accent: "var(--warn)",
+    blurb: "电力、管道和不许停机",
+    skills: [
+      {
+        name: "电网扩容",
+        desc: "提高全厂 token 供应上限与瞬时功率。",
+        icon: "≋",
+        cost: "1,000",
+        prereq: [],
+        effect: "装机容量 +8k",
+        active: true,
+      },
+      {
+        name: "管道优化",
+        desc: "按下游饥饿程度动态分配 token 流量。",
+        icon: "⊥",
+        cost: "8,000",
+        prereq: ["电网扩容"],
+        effect: "吞吐量 +60%",
+        active: true,
+      },
+      {
+        name: "蓄能电池",
+        desc: "闲时把余量存起来，峰值再放出去。",
+        icon: "▲",
+        cost: "19,000",
+        prereq: ["管道优化"],
+        effect: "峰值成本 −38%",
+        active: false,
+      },
+      {
+        name: "自愈集群",
+        desc: "厂房故障自动迁移产线，升级不停机。",
+        icon: "✧",
+        cost: "88,000",
+        prereq: ["蓄能电池", "多线交付"],
+        effect: "SLA 99.99%",
+        active: false,
+      },
+    ],
+  },
+  {
+    key: "delivery",
+    label: "交付",
+    code: "DELIVERY",
+    accent: "color-mix(in srgb, var(--data) 55%, var(--plasma))",
+    blurb: "成品怎么运到用户手上",
+    skills: [
+      {
+        name: "成品入库",
+        desc: "产出自动归档进 DEPOT 并生成清单。",
+        icon: "⇩",
+        cost: "1,400",
+        prereq: [],
+        effect: "检索耗时 −50%",
+        active: true,
+      },
+      {
+        name: "灰度出货",
+        desc: "分批放量，指标异常就自动回滚。",
+        icon: "⊕",
+        cost: "6,800",
+        prereq: ["成品入库"],
+        effect: "回滚耗时 12s",
+        active: false,
+      },
+      {
+        name: "陆运车队",
+        desc: "大件产物改走批量陆运，省管道带宽。",
+        icon: "⇉",
+        cost: "17,500",
+        prereq: ["灰度出货"],
+        effect: "批量交付 ×5",
+        active: false,
+      },
+      {
+        name: "多线交付",
+        desc: "同一批成品并行发往多个目标环境。",
+        icon: "★",
+        cost: "60,000",
+        prereq: ["陆运车队", "返工闭环"],
+        effect: "环境漂移归零",
+        active: false,
+      },
+    ],
+  },
+];
+
+const tiers = [
+  { id: "T1", label: "起步" },
+  { id: "T2", label: "扩产" },
+  { id: "T3", label: "精益" },
+  { id: "T4", label: "满产" },
+];
+
+const unlocked = branches.reduce(
+  (n, b) => n + b.skills.filter((s) => s.active).length,
+  0
+);
+const total = branches.reduce((n, b) => n + b.skills.length, 0);
+---
+
+<section id="skills" class="shell">
+  <span class="stencil">技能树</span>
+  <h2 class="h-sec">每个 Agent 都是一座工厂</h2>
+  <p class="sub-sec">
+    像 RTS 游戏一样解锁科技。六条分支、四个阶段，共 {total} 张技能卡；同一分支的前置用连线表示，
+    跨分支的前置会标在卡面上。
+  </p>
+
+  <div class="tree-meta">
+    <span class="tree-meta__count readout">{unlocked} / {total}</span>
+    <span class="tree-meta__label">已解锁</span>
+    <div class="gauge tree-meta__gauge">
+      <i style={`width:${(unlocked / total) * 100}%`}></i>
+    </div>
+    <span class="tree-meta__pan">左右拖动查看完整科技树</span>
+  </div>
+
+  <div class="tree-scroll">
+    <div class="tree">
+      <div class="tree__tiers">
+        {
+          tiers.map((t) => (
+            <div class="tree__tier">
+              <span class="tree__tier-id">{t.id}</span>
+              <span class="tree__tier-label">{t.label}</span>
+            </div>
+          ))
+        }
+      </div>
+
+      {
+        branches.map((b) => (
+          <div class="tree__branch" style={`--accent:${b.accent}`}>
+            <div class="tree__head">
+              <span class="tree__head-label">{b.label}</span>
+              <span class="tree__head-code">{b.code}</span>
+              <span class="tree__head-blurb">{b.blurb}</span>
+            </div>
+
+            <div class="tree__row">
+              {b.skills.map((s, i) => {
+                const own = b.skills.map((x) => x.name);
+                const crossed = s.prereq.filter((p) => !own.includes(p));
+                return (
+                  <div
+                    class:list={["tech", { "tech--locked": !s.active }]}
+                    data-tier={tiers[i].id}
+                  >
+                    {i > 0 && <span class="tech__link" aria-hidden="true"></span>}
+                    <div class="tech__top">
+                      <span class="tech__icon" aria-hidden="true">{s.icon}</span>
+                      <span class="tech__tier">{tiers[i].id}</span>
+                    </div>
+                    <h3 class="tech__name">{s.name}</h3>
+                    <p class="tech__desc">{s.desc}</p>
+                    {crossed.length > 0 && (
+                      <div class="tech__prereq">
+                        <span class="tech__prereq-hint">需</span>
+                        {crossed.map((p) => (
+                          <span class="tech__prereq-tag">{p}</span>
+                        ))}
+                      </div>
+                    )}
+                    <div class="tech__foot">
+                      <span class="tech__cost">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--power)" stroke-width="2"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
+                        {s.cost}
+                      </span>
+                      <span class="tech__effect">{s.effect}</span>
+                    </div>
+                    {!s.active && <span class="tech__lock" title="未解锁">LOCKED</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ---------- progress meta ---------- */
+  .tree-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 30px;
+    font-family: var(--mono);
+  }
+  .tree-meta__count {
+    font-size: 18px;
+    color: var(--power);
+  }
+  .tree-meta__label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .tree-meta__gauge {
+    width: 160px;
+  }
+  .tree-meta__pan {
+    display: none;
+    margin-left: auto;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- tree frame ---------- */
+  .tree-scroll {
+    margin-top: 22px;
+  }
+
+  .tree {
+    --gap: 16px;
+    --card: minmax(210px, 1fr);
+  }
+
+  .tree__tiers,
+  .tree__row {
+    display: grid;
+    grid-template-columns: repeat(4, var(--card));
+    gap: var(--gap);
+  }
+
+  .tree__tiers {
+    padding-bottom: 9px;
+    border-bottom: var(--hair);
+  }
+
+  .tree__tier {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--mono);
+  }
+  .tree__tier-id {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--ink-dim);
+  }
+  .tree__tier-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- branch ---------- */
+  .tree__branch {
+    padding: 22px 0 24px;
+    border-bottom: var(--hair);
+  }
+  .tree__branch:last-child {
+    border-bottom: 0;
+  }
+
+  .tree__head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-left: 11px;
+    border-left: 3px solid var(--accent);
+  }
+  .tree__head-label {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+  }
+  .tree__head-code {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+  }
+  .tree__head-blurb {
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- card ---------- */
+  .tech {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 14px 15px 13px;
+    background: linear-gradient(180deg, var(--steel-800), var(--steel-850));
+    border: 1px solid var(--steel-600);
+    border-top: 2px solid var(--accent);
+    box-shadow: var(--bevel);
+    transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+  }
+  .tech:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--steel-500));
+    box-shadow: var(--bevel), 0 0 26px -12px var(--accent);
+  }
+
+  /* prerequisite connector, drawn into the grid gap on the card's left */
+  .tech__link {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--gap) * -1 - 1px);
+    width: calc(var(--gap) + 1px);
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+  .tech__link::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateY(-50%);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  .tech--locked {
+    opacity: 0.5;
+    filter: saturate(0.35);
+  }
+  .tech--locked .tech__link {
+    opacity: 0.28;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--accent) 0 4px,
+      transparent 4px 8px
+    );
+  }
+  .tech--locked .tech__link::after {
+    display: none;
+  }
+
+  .tech__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .tech__icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    line-height: 1;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 9%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+
+  .tech__tier {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+  }
+
+  .tech__name {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .tech__desc {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-dim);
+  }
+
+  .tech__prereq {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+  }
+  .tech__prereq-hint {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+  .tech__prereq-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    padding: 2px 5px;
+    color: var(--ink-dim);
+    background: var(--steel-900);
+    border: 1px solid var(--steel-600);
+    border-left: 2px solid var(--accent);
+  }
+
+  .tech__foot {
+    margin-top: auto;
+    padding-top: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-top: var(--hair);
+  }
+
+  .tech__cost {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--power);
+  }
+
+  .tech__effect {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    text-align: right;
+    color: var(--ok);
+  }
+
+  /* small corner badge — a full-card overlay would drown a 24-card grid */
+  .tech__lock {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px 6px;
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--steel-950);
+    background: var(--steel-400);
+  }
+  .tech--locked .tech__tier {
+    visibility: hidden;
+  }
+
+  /* ---------- narrow: pin and pan, same as the factory map ---------- */
+  @media (max-width: 1000px) {
+    .tree-scroll {
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 10px;
+    }
+    .tree {
+      min-width: 940px;
+    }
+    .tree-meta__pan {
+      display: inline;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .tree-meta {
+      flex-wrap: wrap;
+    }
+    .tree-meta__gauge {
+      width: 100%;
+      order: 3;
+    }
+    .tree-meta__pan {
+      order: 4;
+      margin-left: 0;
+    }
+  }
+</style>
