@@ -22,10 +22,10 @@ export const ui = {
     "hero.title.accent": "industrial building",
     "hero.title.post": " game",
     "hero.sub":
-      "Every agent is a factory, tokens are the power supply, and output moves downstream by pipe and truck. Assemble your agent production line, unlock skill cards, and schedule AI throughput the way you would run an RTS base.",
+      "Every agent is a factory, tokens are the power supply, and output moves downstream by pipe and truck. Assemble your agent production line from 19 prefab templates — text, image, video and audio — unlock skill cards, and schedule AI throughput the way you would run an RTS base.",
     "hero.cta.primary": "Start building",
     "hero.cta.secondary": "See the control panel",
-    "hero.meta.plants": "prefab plant types",
+    "hero.meta.plants": "prefab line templates",
     "hero.meta.cards": "skill cards",
     "hero.meta.flowPre": "visualized ",
     "hero.meta.flowPost": " flow",
@@ -84,7 +84,7 @@ export const ui = {
     "pipeline.stencil": "production flow",
     "pipeline.title": "How one task travels the whole line",
     "pipeline.sub":
-      "Five stations from intake to shipping. Every step can be paused, overridden or rolled back — you are the dispatcher, not a spectator.",
+      "Five stations from intake to shipping. Connectors pull raw material in automatically — files, URLs or scheduled feeds — and every step can be paused, overridden or rolled back. You are the dispatcher, not a spectator.",
     "pipeline.01.title": "Intake",
     "pipeline.01.body":
       "Natural-language tasks arrive at the INTAKE triage station and are dispatched by type, priority and budget.",
@@ -104,7 +104,7 @@ export const ui = {
     "sandbox.stencil": "interactive sandbox",
     "sandbox.title": "Get hands on and reshape the line yourself",
     "sandbox.sub":
-      "Drag plants, lay pipes, tear out the stations you do not need, then hit Dispatch — the work packet follows the topology you built all the way to the depot, tokens are billed per segment, and anything that fails QA loops back.",
+      "Drag plants, lay pipes, tear out the stations you do not need, then hit Dispatch — the work packet follows the topology you built all the way to the depot. Drop in a file or point at a URL, the QA station checks every output against your spec, and anything that fails loops back. Tokens are billed per segment.",
     "sandbox.legend.data": "context / research",
     "sandbox.legend.plasma": "plan / blueprint",
     "sandbox.legend.power": "build / output",
@@ -272,8 +272,8 @@ export const ui = {
     "cta.title": "Claim a plot and start building your agent line",
     "cta.sub":
       "Seats in the first beta wave are limited and go first to teams with a real multi-agent workflow. Leave an email and we will send build permits as each wave opens.",
-    "cta.list1": "Seven prefab plant templates, ready out of the box",
-    "cta.list2": "Full token-flow visualization with cost and budget control",
+    "cta.list1": "19 prefab production line templates, ready out of the box",
+    "cta.list2": "Auto-fetch connectors and scheduled triggers — the line runs itself",
     "cta.list3": "A skill-card system to unlock agent abilities as you need them",
     "cta.email": "Commander email",
     "cta.size": "Team size",
@@ -308,10 +308,10 @@ export const ui = {
     "hero.title.accent": "工业建造",
     "hero.title.post": "游戏",
     "hero.sub":
-      "每个 Agent 是一座厂房，token 是电力，产出通过管道与卡车运往下游。搭建你的智能体流水线，解锁技能卡，用 RTS 的直觉调度 AI 生产力。",
+      "每个 Agent 是一座厂房，token 是电力，产出通过管道与卡车运往下游。从 19 条预制产线模板开始搭建——文本、图像、视频、音频全覆盖——解锁技能卡，用 RTS 的直觉调度 AI 生产力。",
     "hero.cta.primary": "开始建造",
     "hero.cta.secondary": "查看控制面板",
-    "hero.meta.plants": "类预制厂房",
+    "hero.meta.plants": "条预制产线模板",
     "hero.meta.cards": "张技能卡",
     "hero.meta.flowPre": "可视化 ",
     "hero.meta.flowPost": " 流向",
@@ -369,7 +369,7 @@ export const ui = {
     "pipeline.stencil": "生产流程",
     "pipeline.title": "一条任务，如何走完整条产线",
     "pipeline.sub":
-      "从接单到出货共五道工序。每一步都可暂停、插手、回滚——你是总调度，不是旁观者。",
+      "从接单到出货共五道工序。Connector 自动拉取原料——文件、链接或定时订阅——每一步都可暂停、插手、回滚。你是总调度，不是旁观者。",
     "pipeline.01.title": "接单入库",
     "pipeline.01.body":
       "自然语言任务进入 INTAKE 分流站，按类型、优先级与预算派单。",
@@ -389,7 +389,7 @@ export const ui = {
     "sandbox.stencil": "交互沙盘",
     "sandbox.title": "直接上手，把产线改成你的样子",
     "sandbox.sub":
-      "拖动厂房、铺设管道、拆掉不需要的工序，然后按下「派发任务」——工件会沿着你搭出来的拓扑一路走到成品仓库，token 按段扣费，质检不通过就原路返工。",
+      "拖动厂房、铺设管道、拆掉不需要的工序，然后按下「派发任务」——工件会沿着你搭出来的拓扑一路走到成品仓库。拖入文件或填入链接，质检站按你的规格逐件检查，不合格就原路返工。token 按段扣费。",
     "sandbox.legend.data": "资料 / 上下文",
     "sandbox.legend.plasma": "计划 / 施工图",
     "sandbox.legend.power": "构建 / 产出",
@@ -533,8 +533,8 @@ export const ui = {
     "cta.title": "申请一块厂区，开始建造你的智能体产线",
     "cta.sub":
       "首批内测席位有限，优先开放给有真实多智能体工作流需求的团队。留下邮箱，我们会随开服批次逐轮发出建造许可。",
-    "cta.list1": "7 类预制厂房模板，开箱即用",
-    "cta.list2": "完整 token 流向可视化与成本预算控制",
+    "cta.list1": "19 条预制产线模板，开箱即用",
+    "cta.list2": "自动拉料连接器与定时触发——产线自己跑",
     "cta.list3": "技能卡系统，按需解锁 Agent 能力",
     "cta.email": "指挥官邮箱",
     "cta.size": "团队规模",
