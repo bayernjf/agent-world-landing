@@ -22,7 +22,7 @@ export const ui = {
     "hero.title.accent": "industrial building",
     "hero.title.post": " game",
     "hero.sub":
-      "Every agent is a factory, tokens are the power supply, and output moves downstream by pipe and truck. Assemble your agent production line from 19 prefab templates — text, image, video and audio — unlock skill cards, and schedule AI throughput the way you would run an RTS base.",
+      "Every agent is a factory, tokens are the power supply, and output moves downstream by pipe and truck. Assemble your agent production line from 33 prefab templates — text, image, video and audio — unlock skill cards, and schedule AI throughput the way you would run an RTS base.",
     "hero.cta.primary": "Start building",
     "hero.cta.secondary": "See the control panel",
     "hero.meta.plants": "prefab line templates",
@@ -272,7 +272,7 @@ export const ui = {
     "cta.title": "Claim a plot and start building your agent line",
     "cta.sub":
       "Seats in the first beta wave are limited and go first to teams with a real multi-agent workflow. Leave an email and we will send build permits as each wave opens.",
-    "cta.list1": "19 prefab production line templates, ready out of the box",
+    "cta.list1": "33 prefab production line templates, ready out of the box",
     "cta.list2": "Auto-fetch connectors and scheduled triggers — the line runs itself",
     "cta.list3": "A skill-card system to unlock agent abilities as you need them",
     "cta.email": "Commander email",
@@ -308,7 +308,7 @@ export const ui = {
     "hero.title.accent": "工业建造",
     "hero.title.post": "游戏",
     "hero.sub":
-      "每个 Agent 是一座厂房，token 是电力，产出通过管道与卡车运往下游。从 19 条预制产线模板开始搭建——文本、图像、视频、音频全覆盖——解锁技能卡，用 RTS 的直觉调度 AI 生产力。",
+      "每个 Agent 是一座厂房，token 是电力，产出通过管道与卡车运往下游。从 33 条预制产线模板开始搭建——文本、图像、视频、音频全覆盖——解锁技能卡，用 RTS 的直觉调度 AI 生产力。",
     "hero.cta.primary": "开始建造",
     "hero.cta.secondary": "查看控制面板",
     "hero.meta.plants": "条预制产线模板",
@@ -533,7 +533,7 @@ export const ui = {
     "cta.title": "申请一块厂区，开始建造你的智能体产线",
     "cta.sub":
       "首批内测席位有限，优先开放给有真实多智能体工作流需求的团队。留下邮箱，我们会随开服批次逐轮发出建造许可。",
-    "cta.list1": "19 条预制产线模板，开箱即用",
+    "cta.list1": "33 条预制产线模板，开箱即用",
     "cta.list2": "自动拉料连接器与定时触发——产线自己跑",
     "cta.list3": "技能卡系统，按需解锁 Agent 能力",
     "cta.email": "指挥官邮箱",
