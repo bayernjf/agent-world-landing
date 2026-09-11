@@ -2,13 +2,13 @@
 
 > A gamified multi-agent orchestration workbench. Every agent is a factory, tokens are
 > the power supply, and output moves downstream by pipe and truck. You assemble an agent
-> production line, unlock skill cards, and schedule AI throughput the way you would run
+> production line, mount skill cards, and schedule AI throughput the way you would run
 > a real-time-strategy base.
 
 - Site: https://agent-world.bayjf.com (English) · https://agent-world.bayjf.com/zh/ (简体中文)
-- Source: https://github.com/bayernjf/agent-world
-- Status: closed beta. The site is a landing page with an interactive sandbox; access is
-  granted in waves via the request form.
+- Source: https://github.com/bayernjf/agent-world (MIT licensed)
+- Status: product v0.3, closed beta. The site is a landing page with an interactive demo
+  sandbox; access is granted in waves via the request form.
 
 ## The core metaphor
 
@@ -21,10 +21,10 @@ them as an industrial base:
   minute, utilization.
 - **Output = freight.** Intermediate artifacts travel along pipes and haul roads to the next
   station, so data flow is visible rather than inferred.
-- **Skill = skill card.** Agent capabilities are unlocked from a tech tree, the way an RTS
-  building unlocks abilities.
+- **Skill = skill card.** Agent capabilities are mounted as skill cards; the landing page
+  presents them as an RTS tech tree.
 
-## Seven prefab plant types
+## Seven canonical plants (gamified roles)
 
 | Plant | Role |
 | --- | --- |
@@ -35,6 +35,13 @@ them as an industrial base:
 | CRITIC | QA & rework |
 | SHIPYARD | build & ship |
 | DEPOT | artifact depot |
+
+These seven are the canonical roles in the narrative; the product actually ships **29 node
+types** in five groups: five AI-generation nodes (text / image / video / audio / generic
+multimodal), nine workshop-control nodes (branch, loop, parallel, fanout, select, human
+approval, subprocess, …), seven material-handling nodes (table, database, file parse,
+translate, OCR, convert, …), six external-device nodes (HTTP, code exec, search, notify,
+compliance, publish) plus source and sink.
 
 ## The production flow (five stations)
 
@@ -50,37 +57,71 @@ them as an industrial base:
    the artifact in DEPOT.
 
 Every step can be paused, overridden or rolled back. The operator is the dispatcher, not a
-spectator.
+spectator. In the product a rework loop is a first-class construct: a quality gate owns its
+rework edge, and dropping every rework edge must leave a DAG; exhausted gates follow an
+explicit pass / scrap / halt policy instead of looping forever, and error edges route node
+failures into catch branches.
+
+## Nodes, connectors and triggers
+
+- **33 built-in pipeline templates** across 11 categories (marketing content, data analysis,
+  writing, office collaboration, dev integration, legal & compliance, finance & audit, IT
+  ops, customer service, education, life); the blank canvas is not counted as a template.
+- **Six declarative source connectors**: manual, local file (path/glob, text or images),
+  HTTP(S), run-time form, SQL database (sqlite/postgres, read-only) and product library;
+  structured data is available downstream via `${...}` interpolation.
+- **Five triggers**: manual, webhook, cron schedule, event and batch.
+
+## Two-way MCP
+
+- **As a client**: external MCP servers can be consumed as tools — operator-level config via
+  environment variables, and users can self-serve remote http/sse servers in Settings
+  (per-user connection pools, connect-on-save).
+- **As a server**: the platform itself can be exposed as an MCP server with 15 tools over
+  stdio and Streamable HTTP/SSE, negotiating protocol revisions 2026-07-28 / 2025-11-25 /
+  2024-11-05 and serving OAuth 2.1 protected-resource metadata.
 
 ## Interactive sandbox
 
-The landing page ships a working sandbox: drag plants, lay pipes, delete stations you do not
-need, then hit Dispatch. A work packet follows the topology you built all the way to the
-depot, tokens are billed per segment, and anything failing QA loops back through rework.
-Pipe colours encode what is moving — context/research, plan/blueprint, build/output, rework.
+The landing page ships a working **demo** sandbox (standalone from the product itself):
+drag plants, lay pipes, delete stations you do not need, then hit Dispatch. A work packet
+follows the topology you built all the way to the depot, tokens are billed per segment, and
+anything failing QA loops back through rework. Pipe colours encode what is moving —
+context/research, plan/blueprint, build/output, rework. The product itself is building a
+macro park view (CanvasPark) and a cross-pipeline operations workbench; the flat-view
+prototype has landed.
 
-## Skill tech tree
+## Skill cards (the tech tree is a gamified view)
 
-24 skill cards across six branches and four tiers (T1–T4), with cross-branch prerequisites:
+The tech tree on the landing page is the gamified rendering of the skill system: six
+branches × four tiers (T1–T4), 24 **display cards** in total, with same-branch connector
+lines and cross-branch prerequisite tags. The real skill system in the product:
 
-- **Orchestration** — who works on what, and when
-- **Fabrication** — turning plans into real artifacts
-- **Quality** — nothing substandard leaves the gate
-- **Intelligence** — so the plants know what they are doing
-- **Infrastructure** — power, pipes, and no downtime
-- **Delivery** — getting the goods to the user
+- **11 built-in skill cards** across four kinds: tool, prompt-module, output-contract and
+  judge (judge cards mount on quality gates).
+- Users can **author their own data skill cards** (forced `local:` prefix, data-only with no
+  code execution, never shadowing a built-in card of the same id).
 
-## Control panel readouts
+## Control panel and observability
 
 Token supply, agent activity, pipe throughput, task queue, quality index (pass/rework rate),
-power draw against budget, and system status for orchestrator, pipes, storage and API.
+power draw against budget, and system status for orchestrator, pipes, storage and API. In the
+product this maps to the **cross-pipeline operations workbench**: per-line fleet health, last
+run and cost rollups. Runs are built on an immutable event stream, so pause/resume,
+disconnect-reconnect, time-travel replay, audit and A/B comparison all read the same log.
 
 ## What makes it different
 
-- Orchestration state is legible at a glance instead of buried in logs.
-- Cost is a first-class resource in the interface, not a bill discovered afterwards.
-- Topology is editable by hand — you can see and change the route work takes.
-- Capability growth is explicit: skills are unlocked, not silently configured.
+- Orchestration state is legible at a glance instead of buried in logs; the rework loop is a
+  compiler-enforced first-class construct, not an arbitrary cycle.
+- Cost is a first-class resource: metered per call after the fact (never charged up front),
+  the budget is a hard ceiling that trips the whole line, with per-model cost attribution.
+- Topology is editable by hand — you can see and change the route work takes, and every run
+  is fully replayable.
+- Two-way MCP: consume external MCP tools and expose the platform as a standards-compliant
+  MCP server.
+- Capability growth is explicit: mount skill cards as needed and author your own prompt
+  modules, output contracts and judges.
 
 ## Beta access
 
