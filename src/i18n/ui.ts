@@ -11,22 +11,22 @@ export const ui = {
   en: {
     "meta.title": "Agent World — a gamified multi-agent orchestration workbench",
     "meta.description":
-      "Every agent is a factory, tokens are the power supply, and output travels downstream by pipe and truck. Build and schedule your AI production line with real-time-strategy instincts.",
+      "Every agent is a factory, tokens are the power supply, and output travels downstream by pipe and truck. Build AI production lines from 33 templates and 29 node types — quality gates, rework loops, two-way MCP and hard budget caps included.",
 
     "nav.langSwitch": "中文",
     "hud.home": "Agent World home",
 
-    "hero.badge": "ALPHA · closed beta intake",
+    "hero.badge": "v0.3 · closed beta intake",
     "hero.title.line1": "Turn multi-agent orchestration",
     "hero.title.pre": "into an ",
     "hero.title.accent": "industrial building",
     "hero.title.post": " game",
     "hero.sub":
-      "Every agent is a factory, tokens are the power supply, and output moves downstream by pipe and truck. Assemble your agent production line from 33 prefab templates — text, image, video and audio — unlock skill cards, and schedule AI throughput the way you would run an RTS base.",
+      "Every agent is a factory, tokens are the power supply, and output moves downstream by pipe and truck. Assemble your line from 33 prefab templates and 29 node types — text, image, video and audio — wire external tools in over MCP, unlock skill cards, and schedule AI throughput the way you would run an RTS base.",
     "hero.cta.primary": "Start building",
     "hero.cta.secondary": "See the control panel",
     "hero.meta.plants": "prefab line templates",
-    "hero.meta.cards": "skill cards",
+    "hero.meta.nodes": "node types",
     "hero.meta.flowPre": "visualized ",
     "hero.meta.flowPost": " flow",
     "hero.map.bar": "FACTORY FLOOR",
@@ -53,7 +53,7 @@ export const ui = {
     "control.stencil": "control panel",
     "control.title": "Factory operations overview",
     "control.sub":
-      "Watch every agent factory's status, token load and output efficiency in real time.",
+      "Every agent factory's status, token load and output efficiency in real time — in the product this is the cross-line operations workbench: fleet health, last run and cost rollups.",
     "control.resources": "RESOURCE OVERVIEW",
     "control.tokenSupply": "TOKEN SUPPLY",
     "control.capacity": "capacity 32,000",
@@ -142,7 +142,7 @@ export const ui = {
     "skills.stencil": "tech tree",
     "skills.title": "Every agent is a factory",
     "skills.sub":
-      "Unlock tech the way an RTS does. Six branches, four tiers, {total} skill cards in all; same-branch prerequisites are drawn as lines, cross-branch ones are printed on the card.",
+      "The skill system shown as an RTS tech tree: six branches, four tiers, {total} cards on this board; same-branch prerequisites are drawn as lines, cross-branch ones are printed on the card. Eleven built-in cards across four kinds — tool, prompt module, output contract, judge — ship today, and you can author your own.",
     "skills.unlocked": "unlocked",
     "skills.pan": "drag sideways for the full tree",
     "skills.prereqHint": "needs",
@@ -272,9 +272,11 @@ export const ui = {
     "cta.title": "Claim a plot and start building your agent line",
     "cta.sub":
       "Seats in the first beta wave are limited and go first to teams with a real multi-agent workflow. Leave an email and we will send build permits as each wave opens.",
-    "cta.list1": "33 prefab production line templates, ready out of the box",
-    "cta.list2": "Auto-fetch connectors and scheduled triggers — the line runs itself",
-    "cta.list3": "A skill-card system to unlock agent abilities as you need them",
+    "cta.list1": "33 prefab production line templates across 11 categories, ready out of the box",
+    "cta.list2": "Six source connectors (file, URL, form, SQL database, product library) and five triggers incl. webhook and cron — the line runs itself",
+    "cta.list3": "A skill-card system: 11 built-in cards across four kinds (tool, prompt module, output contract, judge), plus your own",
+    "cta.list4": "Two-way MCP: call external MCP servers as tools, and expose the platform itself as an MCP server with 15 tools",
+    "cta.list5": "Cost is metered per call under a hard budget ceiling — the whole line trips before you overspend",
     "cta.email": "Commander email",
     "cta.size": "Team size",
     "cta.size1": "1 · solo",
@@ -297,22 +299,22 @@ export const ui = {
   zh: {
     "meta.title": "Agent World — 游戏化的多智能体编排工作台",
     "meta.description":
-      "每个 Agent 是一座厂房，token 是电力，产出沿管道流转。用即时战略游戏的直觉搭建并调度你的 AI 生产线。",
+      "每个 Agent 是一座厂房，token 是电力，产出沿管道流转。33 条模板、29 种节点搭建 AI 生产线：质检门、返工回路、MCP 双向接入与预算硬熔断一应俱全。",
 
     "nav.langSwitch": "English",
     "hud.home": "Agent World 首页",
 
-    "hero.badge": "ALPHA · 内测招募中",
+    "hero.badge": "v0.3 · 内测招募中",
     "hero.title.line1": "把多智能体编排",
     "hero.title.pre": "变成一场",
     "hero.title.accent": "工业建造",
     "hero.title.post": "游戏",
     "hero.sub":
-      "每个 Agent 是一座厂房，token 是电力，产出通过管道与卡车运往下游。从 33 条预制产线模板开始搭建——文本、图像、视频、音频全覆盖——解锁技能卡，用 RTS 的直觉调度 AI 生产力。",
+      "每个 Agent 是一座厂房，token 是电力，产出通过管道与卡车运往下游。从 33 条预制产线模板与 29 种节点开始搭建——文本、图像、视频、音频全覆盖——通过 MCP 接入外部工具，解锁技能卡，用 RTS 的直觉调度 AI 生产力。",
     "hero.cta.primary": "开始建造",
     "hero.cta.secondary": "查看控制面板",
     "hero.meta.plants": "条预制产线模板",
-    "hero.meta.cards": "张技能卡",
+    "hero.meta.nodes": "种节点类型",
     "hero.meta.flowPre": "可视化 ",
     "hero.meta.flowPost": " 流向",
     "hero.map.bar": "工厂全景 · FACTORY FLOOR",
@@ -338,7 +340,7 @@ export const ui = {
 
     "control.stencil": "控制面板",
     "control.title": "工厂调度总览",
-    "control.sub": "实时监控所有 Agent 工厂的运行状态、token 负载和产出效率。",
+    "control.sub": "实时监控所有 Agent 工厂的运行状态、token 负载和产出效率——产品里对应跨产线运营工作台：全厂健康度、最近运行与成本汇总。",
     "control.resources": "资源总览",
     "control.tokenSupply": "TOKEN 供应",
     "control.capacity": "装机容量 32,000",
@@ -427,7 +429,7 @@ export const ui = {
     "skills.stencil": "技能树",
     "skills.title": "每个 Agent 都是一座工厂",
     "skills.sub":
-      "像 RTS 游戏一样解锁科技。六条分支、四个阶段，共 {total} 张技能卡；同一分支的前置用连线表示，跨分支的前置会标在卡面上。",
+      "技能体系的 RTS 科技树视图：六条分支、四个阶段，本页共 {total} 张展示卡；同分支前置用连线表示，跨分支前置标在卡面。产品实际内置 11 张技能卡、四种类型（工具 / Prompt 模块 / 输出契约 / 评判标准），并支持自建。",
     "skills.unlocked": "已解锁",
     "skills.pan": "左右拖动查看完整科技树",
     "skills.prereqHint": "需",
@@ -533,9 +535,11 @@ export const ui = {
     "cta.title": "申请一块厂区，开始建造你的智能体产线",
     "cta.sub":
       "首批内测席位有限，优先开放给有真实多智能体工作流需求的团队。留下邮箱，我们会随开服批次逐轮发出建造许可。",
-    "cta.list1": "33 条预制产线模板，开箱即用",
-    "cta.list2": "自动拉料连接器与定时触发——产线自己跑",
-    "cta.list3": "技能卡系统，按需解锁 Agent 能力",
+    "cta.list1": "33 条预制产线模板、覆盖 11 大分类，开箱即用",
+    "cta.list2": "6 类原料连接器（文件 / 链接 / 表单 / SQL 数据库 / 商品库）+ 5 种触发（webhook、cron 等），产线自己跑",
+    "cta.list3": "技能卡系统：内置 11 张、四种类型（工具 / Prompt 模块 / 输出契约 / 评判），还能自建数据卡",
+    "cta.list4": "MCP 双向打通：既能调用外部 MCP 服务作为工具，也能把平台自身暴露为 MCP Server（15 个工具）",
+    "cta.list5": "成本按调用计量、预算硬熔断——超支前整条线自动停下",
     "cta.email": "指挥官邮箱",
     "cta.size": "团队规模",
     "cta.size1": "1 人 · 独立开发",
