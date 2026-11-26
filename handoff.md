@@ -2,6 +2,19 @@
 
 更新时间：2026-09-11
 
+## 待办登记（标准）
+
+> 本段是本仓唯一活跃待办入口；详细背景见下方原有章节。
+> 最近同步：2026-11-26
+
+<!-- tier:todos v1 -->
+| id | title | status | priority | owner | next | evidence | updated |
+|---|---|---|---|---|---|---|---|
+| AWL-01 | 确认内测定位 | open | p1 | owner | 保留 closed beta 漏斗或改为开源可用导向（影响徽标/CTA/llms） | `handoff.md` 下一步 1 | 2026-09-11 |
+| AWL-02 | 文案随 agent-world 产品迭代对账 | open | p2 | self | 按 `## 数字型文案对账清单` 核对节点数/MCP/技能卡 | `handoff.md` 对账清单 | 2026-09-11 |
+| AWL-03 | 与 hub 产品卡封面一致 | open | p3 | self | 引用构建产出的 preview.png | `handoff.md` 下一步 4 | 2026-09-11 |
+<!-- /tier:todos -->
+
 ## 项目概况
 Agent World 落地页：游戏化的多智能体编排工作台（Agent 是厂房、token 是电力、产出沿管道流转）。
 Astro 7 静态站点（`output: 'static'`），中英双语（`/` 英文默认，`/zh/` 中文），React 19 island
